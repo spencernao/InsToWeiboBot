@@ -17,7 +17,7 @@ import sys
 import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
-
+import selenium.common.exceptions as exc
 #logging.basicConfig(filename=r'C:\Users\Yi Chen\Instagram\InsToWb.log', level=logging.DEBUG, 
 #                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
 #logger=logging.getLogger(__name__)
@@ -272,27 +272,44 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 #def posting_click_check():
 #    timeout = 0
 #    while timeout <5:
+def click_exc():
+    send_successfully = False
+    counter = 0
+    while not send_successfully:
+        if counter == 3:
+            write_error_message('Weibo cannot Post')
+            sys.exit(1)            
+            break
+        try:
+            web.find_element_by_link_text('确定').click()
+            counter+=1
+            time.sleep(2)
+        except exc.NoSuchElementException:
+            send_successfully = True
+        except exc.StaleElementReferenceException:
+            send_successfully = True
+        else:        
+            send_successfully = False
+
+    return send_successfully
+
+#Make sure weibo can be posted
+def double_check(click_path):
+    if click_exc():
+        web.find_element_by_xpath(click_path).click()
+    if click_exc():
+        return True
 
 def post_images(user):
     try:
         time.sleep(60)
         web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(posting_button_path).click()
-        time.sleep(5)
-        try:
-            while(web.find_element_by_name('确定').click()):
-                web.find_element_by_xpath(text_path).click()
-                web.find_element_by_name('发布').click()
-
-    except:
+        double_check(posting_button_path)
+    except exc.NoSuchElementException:
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
         web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(posting_button_path).click()
+        double_check(posting_button_path)
         write_error_message('Image Posting Failed')
         sys.exit(1)
     else:
@@ -302,19 +319,15 @@ def post_videos(user):
     try:
         time.sleep(180)
         web.find_element_by_xpath(title_path).send_keys(Translation[user]+'的视频')
-        #web.find_element_by_xpath(video_finish_path).click()
-        web.find_element_by_name('完成').click()
+        double_check(video_finish_path)
         web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(posting_button_path).click()
-    except:
+        double_check(posting_button_path)
+        time.sleep(5)
+    except exc.NoSuchElementException:
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的视频发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
         web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(text_path).click()
-        web.find_element_by_xpath(posting_button_path).click()
+        double_check(posting_button_path)
         write_error_message('Videos Posting Failed')
         sys.exit(1)
     else:
@@ -327,7 +340,7 @@ def send_weibo(user,media,text,ptype):
                 if ptype == 'Post Image':
                     elem=web.find_element_by_xpath(text_path)
                     web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, text[i])
-                    for j in media[i]:#ins post no more thant 18 images
+                    for j in media[i]:#ins post no more thant 9 images
                         web.find_element_by_name('pic1').send_keys(j) 
                     post_images(user)
                 else:
@@ -347,12 +360,12 @@ def send_weibo(user,media,text,ptype):
             for i in text['Story_Text']:
                 elem=web.find_element_by_xpath(text_path)
                 web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, i)
-                for j in range(18) :
+                for j in range(9) :
                     if remain <= 0:
                         break
                     else:
                         remain -=1
-                        web.find_element_by_name('pic1').send_keys(list(media['Story_Img'])[index*18 +j]) 
+                        web.find_element_by_name('pic1').send_keys(list(media['Story_Img'])[index*9 +j]) 
                 index +=1
                 post_images(user)
         except:
@@ -437,7 +450,7 @@ def InsToWeibo(shift):
                     except:
                         write_error_message('story img pop failed')
                         pass
-                for j in range(0,len(Story_Img_Dir.values()),18):
+                for j in range(0,len(Story_Img_Dir.values()),9):
                     Story_Img_Text.append((Translation[name[i]])+'快拍照片合集')
                 Story_Image_Text.update({'Story_Text':Story_Img_Text})
                 Story_Image_Jpg.update({'Story_Img':Story_Img_Dir.values()})                 

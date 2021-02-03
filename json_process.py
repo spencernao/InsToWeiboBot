@@ -20,8 +20,9 @@ import pandas
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-  
+import urllib.request
 import os
+import selenium.common.exceptions as exc
 #emoji JS
 JS_ADD_TEXT_TO_INPUT = """
   var elm = arguments[0], txt = arguments[1];
@@ -58,6 +59,7 @@ Translation = {"psg": '巴黎圣日耳曼',
 
 text_path = '//*[@id="v6_pl_content_publishertop"]/div/div[2]/textarea'
 posting_button_path = '//*[@id="v6_pl_content_publishertop"]/div/div[3]/div[1]/a'
+title_path = '//*[@id="layer_16123256603691"]/div/div[2]/div[3]/div/dl[1]/dd/div[1]/input'
 
 #//*[@id="v6_pl_content_publishertop"]/div/div[2]/div[1]
 def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
@@ -66,12 +68,58 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
         for i in files:
             if filetype+' ' in i+' ':    # 这里后面不加一个字母可能会出问题，加上一个（不一定是空格）可以解决99.99%的情况
                 name.append(i)    
-    return name   
+    return name 
+
+def click_exc(driver):
+    send_successfully = False
+    counter = 0
+    while not send_successfully:
+        if counter ==1:
+            print('exit')
+            sys.exit(1)            
+            break
+        try:
+            driver.find_element_by_link_text('确定').click()
+            counter+=1
+            time.sleep(2)
+            print('777')
+            print(counter)
+        except exc.NoSuchElementException:
+            send_successfully = True
+            print('222')
+            print(counter)
+        except exc.StaleElementReferenceException:
+            send_successfully = True
+            print('333')
+            print(counter)
+        else:        
+            send_successfully = False
+    return send_successfully
+
+def post_images(driver):
+    
+        try:
+            #time.sleep(60)
+            driver.find_element_by_xpath(text_path).send_keys('test312312123')
+            if click_exc(driver):
+                driver.find_element_by_xpath(title_path).send_keys('888')
+                driver.find_element_by_link_text('完成').click()
+            if click_exc(driver):
+                print('777777')
+        except exc.NoSuchElementException:
+            driver.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien ''的照片发送失败啦Σ( ° △ °|||)︴\n')
+            driver.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
+            driver.find_element_by_xpath(text_path).click()
+            driver.find_element_by_xpath(posting_button_path).click()
+            #write_error_message('Image Posting Failed')            
+            print('111111111')
+            sys.exit(1)
+        #else:
+            #time.sleep(30)
 
 def main():
     username = 'psg'
     dir = r"C:\Users\Yi Chen\Instagram/"+username+'\\'
-    print('77')
     Mp4 = get_filename(dir,'.mp4')
     if Mp4:
         print(type(Mp4[0]))
@@ -81,17 +129,17 @@ def main():
     chrome_options = Options()
     chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
     driver = webdriver.Chrome(chrome_options=chrome_options)
+    path = r"C:\Users\Yi Chen\Desktop/psg"+'\\'
+    for file in os.listdir(path):
+        print(path+file)    
+        driver.find_element_by_name('pic1').send_keys(path+file)
+    #driver.find_element_by_link_text('完成').click()
     #driver.find_element_by_xpath(text_path).send_keys('test312312123')
     #timeout = 0
     #while timeout <5:
-    try:
-        while(driver.find_element_by_name('确定').click()):
-            driver.find_element_by_xpath(text_path).click()
-            driver.find_element_by_name('发布').click()
-            print('222')
-    #driver.find_element_by_class_name('W_input').send_keys('777')
-    except:
-        print('333')
+    #post_images(driver)
+
+
     #    try:
     #        WebDriverWait(driver, 3, 0.01).until(EC.presence_of_element_located((By.XPATH,'//span[@class="W_icon icon_succB UI_animated UI_speed_normal UI_ani_flipInY"]')))
     #    finally:
