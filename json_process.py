@@ -3,11 +3,9 @@ import codecs
 import csv
 from moviepy.editor import *
 import os
-from weibo import Client
 import datetime
 from PIL import Image
 import os
-from splinter import Browser
 from selenium import webdriver
 import pyautogui#键鼠
 import time
@@ -16,7 +14,6 @@ import json
 import codecs
 import moviepy.editor as Video
 import numpy
-import pandas
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -183,10 +180,12 @@ def send_weibo(user,media,text,ptype):
 
 def main():
     username = 'psg'
-    dir = r"C:\Users\Yi Chen\Instagram/"+username+'\\'
-    Story_Video_Mp4={'Story_Mp4':r'C:\Users\Yi Chen\Desktop\Concatenated.mp4'}
-    Story_Video_Text={'Story_Text':"dimaria快拍视频合集"}
-    send_weibo('angeldimariajm',Story_Video_Mp4,Story_Video_Text,'Story Video')
+    dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
+    with open(dir, "w+") as myfile:
+        myfile.write("testingtestingtesting")
+    #Story_Video_Mp4={'Story_Mp4':r'C:\Users\Yi Chen\Desktop\Concatenated.mp4'}
+    #Story_Video_Text={'Story_Text':"dimaria快拍视频合集"}
+    #send_weibo('angeldimariajm',Story_Video_Mp4,Story_Video_Text,'Story Video')
     #TEXT=get_text(username)
     
 

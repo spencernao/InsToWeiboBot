@@ -4,7 +4,6 @@ from weibo import Client
 import datetime
 from PIL import Image
 import os
-from splinter import Browser
 from selenium import webdriver
 import pyautogui#键鼠
 import time
@@ -31,7 +30,7 @@ try:
 except:
     sys.exit('Web starts failed')
 
-#Constant
+#Constant 
 image_path = '//*[@id="swf_upbtn_161232566036921"]'
 video_path = '//*[@id="publisher_upvideo_161232566036911"]'
 title_path = '//*[@id="layer_16126711025721"]/div/div[2]/div[3]/div/dl[1]/dd/div[1]/input'
@@ -119,7 +118,7 @@ Finished = False
 #"anderherrera","abdou.lakhad.diallo","draxlerofficial","florenzi","mittchelb","iganagueye","alexandre_letellier30","colin_dagba"]
 
 def write_error_message(message):
-    with open(r'C:\Users\Yi Chen\Instagram\InsToWb.log', "a") as myfile:
+    with open(r"C:\Users\78646\OneDrive\桌面\InsToWeibo\ErrorMSG.txt", "a") as myfile:
         myfile.write("ERROR: {0}: {1}\n".format(time.ctime(), message))
 
 #Download the users' posts 
@@ -127,16 +126,16 @@ def get_ins_content(users):
     try:
         command='cmd /c instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps timestamp.txt -q --media-metadata'
         os.system(command)
-    except:
+    except: #Still need a solution, unsolved
         #web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien 你Ins被封了Ｏ(≧口≦)Ｏ，快去验证！')
         #web.find_element_by_xpath(posting_button_path).click()
         write_error_message('Ins download failed')
         sys.exit('Ins Downloading Failed')
 
 def get_text (username):
-    path = r'C:\Users\Yi Chen\Instagram'+'\\' + username+'\\'+username+'.json'
+    path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
     try:        
-        with open(path,'rb') as f:  #error check
+        with open(path,'rb') as f:
             Text_dir = {}
             load_dict= json.load(codecs.getreader('utf-8')(f))
             try: #if no post   
@@ -158,7 +157,7 @@ def get_text (username):
     return Text_dir
 
 def get_post_content(username,dir):
-    path = r'C:\Users\Yi Chen\Instagram'+'\\' + username+'\\'+username+'.json'
+    path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
     try:    
         with open(path,'rb') as f:  #error check
             Image_dir={}
@@ -206,7 +205,7 @@ def get_post_content(username,dir):
     return [Image_dir,Video_dir]
 
 def get_story(username,dir):
-    path = r'C:\Users\Yi Chen\Instagram'+'\\' + username+'\\'+username+'.json'
+    path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
     try:
         with open(path,'rb') as f:  #error check
             story_video_dir={}
@@ -273,7 +272,7 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 #def posting_click_check():
 #    timeout = 0
 #    while timeout <5:
-def click_exc():
+def click_exc(): #not functional keyboard control maybe?
     send_successfully = False
     counter = 0
     while not send_successfully:
@@ -301,12 +300,12 @@ def double_check(click_path):
     if click_exc():
         return True
 
-def post_images(user):
+def post_images(user):#double_check change to mouse/keyboard
     try:
         time.sleep(60)
         web.find_element_by_xpath(text_path).click()
         double_check(posting_button_path)
-    except exc.NoSuchElementException:
+    except exc.NoSuchElementException: # not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
         web.find_element_by_xpath(text_path).click()
@@ -316,7 +315,7 @@ def post_images(user):
     else:
         time.sleep(30)
 
-def post_videos(user):
+def post_videos(user):#double_check change to mouse/keyboard
     try:
         time.sleep(60)
         web.find_element_by_xpath(title_path).send_keys(Translation[user]+'的视频')
@@ -324,7 +323,7 @@ def post_videos(user):
         web.find_element_by_xpath(text_path).click()
         double_check(posting_button_path)
         time.sleep(5)
-    except exc.NoSuchElementException:
+    except exc.NoSuchElementException:# not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的视频发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
         web.find_element_by_xpath(text_path).click()
@@ -392,7 +391,7 @@ def InsToWeibo(shift):
     get_ins_content(' '.join(map(str, name)))#Download
     #try:
     for i in range(len(name)):
-        dir = r"C:/Users/Yi Chen/Instagram/"+name[i]+'/'
+        dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo/"+name[i]+'/'
         Image = get_filename(dir,'.jpg')
         Mp4 = get_filename(dir,'.mp4')
         if not Image and not Mp4 :
@@ -404,10 +403,10 @@ def InsToWeibo(shift):
                         print('no such file:%s'%file)
             except FileNotFoundError:
                 pass
-            if os.path.exists(r'C:\Users\Yi Chen\Instagram'+'\\' + name[i]+'\\'+name[i]+'.json'):
-                 os.remove(r'C:\Users\Yi Chen\Instagram'+'\\' + name[i]+'\\'+name[i]+'.json')
+            if os.path.exists(r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + name[i]+'\\'+name[i]+'.json'):
+                 os.remove(r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + name[i]+'\\'+name[i]+'.json')
             else:
-                print("The file "+ r'C:\Users\Yi Chen\Instagram'+'\\' + name[i]+'\\'+name[i]+'.json' + " does not exist")
+                print("The file "+ r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + name[i]+'\\'+name[i]+'.json' + " does not exist")
             continue
         else:
             print('start')
