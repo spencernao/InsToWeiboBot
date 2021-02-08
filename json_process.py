@@ -57,82 +57,139 @@ Translation = {"psg": '巴黎圣日耳曼',
             "alexandre_letellier30":'勒泰利耶',
             "colin_dagba":'达巴'}
 
-text_path = '//*[@id="v6_pl_content_publishertop"]/div/div[2]/textarea'
+image_path = '//*[@id="swf_upbtn_161232566036921"]'
+video_path = '//*[@id="publisher_upvideo_161232566036911"]'
+title_path = '//*[@id="layer_16124928126881"]/div/div[2]/div[3]/div/dl[1]/dd/div[1]/input'
+video_finish_path = '//*[@id="layer_16124928126881"]/div/div[3]/em/a'
 posting_button_path = '//*[@id="v6_pl_content_publishertop"]/div/div[3]/div[1]/a'
-title_path = '//*[@id="layer_16123256603691"]/div/div[2]/div[3]/div/dl[1]/dd/div[1]/input'
+text_path = '//*[@id="v6_pl_content_publishertop"]/div/div[2]/textarea'
+
+chrome_options = Options()
+chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
+web = webdriver.Chrome(chrome_options=chrome_options)
 
 #//*[@id="v6_pl_content_publishertop"]/div/div[2]/div[1]
-def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
-    name = []
-    for root,dirs,files in os.walk(path):
-        for i in files:
-            if filetype+' ' in i+' ':    # 这里后面不加一个字母可能会出问题，加上一个（不一定是空格）可以解决99.99%的情况
-                name.append(i)    
-    return name 
-
-def click_exc(driver):
+def click_exc():
     send_successfully = False
     counter = 0
     while not send_successfully:
-        if counter ==1:
-            print('exit')
+        if counter == 3:
+            #write_error_message('Weibo cannot Post')
             sys.exit(1)            
             break
         try:
-            driver.find_element_by_link_text('确定').click()
+            web.find_element_by_link_text('确定').click()
             counter+=1
             time.sleep(2)
-            print('777')
-            print(counter)
         except exc.NoSuchElementException:
             send_successfully = True
-            print('222')
-            print(counter)
         except exc.StaleElementReferenceException:
             send_successfully = True
-            print('333')
-            print(counter)
         else:        
             send_successfully = False
+
     return send_successfully
 
-def post_images(driver):
+#Make sure weibo can be posted
+def double_check(click_path):
+    print('here')
+    if click_exc():
+        web.find_element_by_xpath(click_path).click()
+    if click_exc():
+        print('777')
+        return
+
+def post_images(user):
+    try:
+        time.sleep(60)
+        web.find_element_by_xpath(text_path).click()
+        double_check(posting_button_path)
+    except exc.NoSuchElementException:
+        web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
+        web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
+        web.find_element_by_xpath(text_path).click()
+        double_check(posting_button_path)
+        #write_error_message('Image Posting Failed')
+        sys.exit(1)
+    else:
+        time.sleep(30)
+
+def post_videos(user):
+    try:
+        print('posting')
+        time.sleep(20)
+        web.find_element_by_xpath(title_path).send_keys(Translation[user]+'的视频')
+        double_check(video_finish_path)
+        web.find_element_by_xpath(text_path).click()
+        double_check(posting_button_path)
+        time.sleep(5)
+    except exc.NoSuchElementException:
+        web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的视频发送失败啦Σ( ° △ °|||)︴\n')
+        web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
+        web.find_element_by_xpath(text_path).click()
+        double_check(posting_button_path)
+        #write_error_message('Videos Posting Failed')
+        sys.exit(1)
+    else:
+        time.sleep(30)
     
+def send_weibo(user,media,text,ptype):
+    if ptype == 'Post Image' or ptype == 'Post Video':
+        try:    
+            for i in media.keys():
+                if ptype == 'Post Image':
+                    elem=web.find_element_by_xpath(text_path)
+                    web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, text[i])
+                    for j in media[i]:#ins post no more thant 9 images
+                        web.find_element_by_name('pic1').send_keys(j) 
+                    post_images(user)
+                else:
+                    for j in media[i]:
+                        elem=web.find_element_by_xpath(text_path)
+                        web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, text[i])
+                        web.find_element_by_name('video').send_keys(j) 
+                        post_videos(user)
+        except:
+            #write_error_message('Image/Video Sending Failed')
+            pass
+
+    elif ptype == 'Story Image':
+        try:  
+            remain = len(media['Story_Img'])
+            index = 0
+            for i in text['Story_Text']:
+                elem=web.find_element_by_xpath(text_path)
+                web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, i)
+                for j in range(9) :
+                    if remain <= 0:
+                        break
+                    else:
+                        remain -=1
+                        web.find_element_by_name('pic1').send_keys(list(media['Story_Img'])[index*9 +j]) 
+                index +=1
+                post_images(user)
+        except:
+            #write_error_message('Story Image Sending Failed')
+            pass
+
+    elif ptype == 'Story Video':
         try:
-            #time.sleep(60)
-            driver.find_element_by_xpath(text_path).send_keys('test312312123')
-            if click_exc(driver):
-                driver.find_element_by_xpath(title_path).send_keys('888')
-                driver.find_element_by_link_text('完成').click()
-            if click_exc(driver):
-                print('777777')
-        except exc.NoSuchElementException:
-            driver.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien ''的照片发送失败啦Σ( ° △ °|||)︴\n')
-            driver.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
-            driver.find_element_by_xpath(text_path).click()
-            driver.find_element_by_xpath(posting_button_path).click()
-            #write_error_message('Image Posting Failed')            
-            print('111111111')
-            sys.exit(1)
-        #else:
-            #time.sleep(30)
+            web.find_element_by_xpath(text_path).send_keys(text['Story_Text'])
+            web.find_element_by_name('video').send_keys(media['Story_Mp4'])
+            post_videos(user)
+        except:
+           #write_error_message('Story Image Sending Failed')
+            pass
 
 def main():
     username = 'psg'
     dir = r"C:\Users\Yi Chen\Instagram/"+username+'\\'
-    Mp4 = get_filename(dir,'.mp4')
-    if Mp4:
-        print(type(Mp4[0]))
-    else:
-        print('7777777')
+    Story_Video_Mp4={'Story_Mp4':r'C:\Users\Yi Chen\Desktop\Concatenated.mp4'}
+    Story_Video_Text={'Story_Text':"dimaria快拍视频合集"}
+    send_weibo('angeldimariajm',Story_Video_Mp4,Story_Video_Text,'Story Video')
     #TEXT=get_text(username)
-    chrome_options = Options()
-    chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
-    driver = webdriver.Chrome(chrome_options=chrome_options)
-    path = r"C:\Users\Yi Chen\Desktop/psg"+'\\'
-    for file in os.listdir(path):
-        print(path+file)    
-        driver.find_element_by_name('pic1').send_keys(path+file)
+    
+
     #driver.find_element_by_link_text('完成').click()
     #driver.find_element_by_xpath(text_path).send_keys('test312312123')
     #timeout = 0

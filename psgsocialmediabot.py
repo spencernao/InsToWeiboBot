@@ -33,8 +33,8 @@ except:
 #Constant
 image_path = '//*[@id="swf_upbtn_161232566036921"]'
 video_path = '//*[@id="publisher_upvideo_161232566036911"]'
-title_path = '//*[@id="layer_16123256603691"]/div/div[2]/div[3]/div/dl[1]/dd/div[1]/input'
-video_finish_path = '//*[@id="layer_16123256603691"]/div/div[3]/em/a'
+title_path = '//*[@id="layer_16126711025721"]/div/div[2]/div[3]/div/dl[1]/dd/div[1]/input'
+video_finish_path = '//*[@id="layer_16126711025721"]/div/div[3]/em/a'
 posting_button_path = '//*[@id="v6_pl_content_publishertop"]/div/div[3]/div[1]/a'
 text_path = '//*[@id="v6_pl_content_publishertop"]/div/div[2]/textarea'
 
@@ -317,7 +317,7 @@ def post_images(user):
 
 def post_videos(user):
     try:
-        time.sleep(180)
+        time.sleep(60)
         web.find_element_by_xpath(title_path).send_keys(Translation[user]+'的视频')
         double_check(video_finish_path)
         web.find_element_by_xpath(text_path).click()
@@ -467,8 +467,11 @@ def InsToWeibo(shift):
                 send_weibo(name[i],Image_Dir,Text_Dir,'Post Image')
             #os.remove(r"C:/Users/Yi Chen/Instagram/"+name[i])
             for file in os.listdir(dir):    
-                if os.path.exists(dir+file):
-                    os.remove(dir+file)
+                try:
+                    if os.path.exists(dir+file):
+                        os.remove(dir+file)
+                except:
+                    pass
          #os.unlink(my_file)
                 else:
                     print('no such file:%s'%file)
@@ -476,8 +479,8 @@ def InsToWeibo(shift):
     #    web.find_element_by_name('pic1').send_keys('@PSG-Le-Parisien 出现了不明故障，我崩溃了！！！救我！！！ヽ(*。>Д<)o゜')
     #    web.find_element_by_xpath(posting_button_path).click()
     #    sys.exit('Other Error')
-
-    Finished = True
+    sys.exit(0)
+    #Finished = True
 
 
 def Timer():    
@@ -492,14 +495,15 @@ def main():
         scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-        scheduler.add_job(Timer, 'date', run_date='2021-02-03 14:05:00')
+        scheduler.add_job(Timer, 'date', run_date='2021-02-07 11:04:00')
         #scheduler.add_job(Timer, 'interval', hours =12)
    # 启动调度任务
         scheduler.start()
         while True:
-            time.sleep(7200)#7200=2*60*60
-            if Finished:
-                sys.exit(0)
+            #continue
+            time.sleep(60)#7200=2*60*60
+            #if Finished:
+                #sys.exit(0)
     except (KeyboardInterrupt):
         raise
     
