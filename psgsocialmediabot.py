@@ -22,6 +22,7 @@ import selenium.common.exceptions as exc
 #                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
 #logger=logging.getLogger(__name__)
 
+
 #Open Browser
 try:
     chrome_options = Options()
