@@ -317,7 +317,7 @@ def post_images(user):#double_check change to mouse/keyboard
 
 def post_videos(user):#double_check change to mouse/keyboard
     try:
-        time.sleep(60)
+        time.sleep(60)#timer or longer time
         web.find_element_by_xpath(title_path).send_keys(Translation[user]+'的视频')
         double_check(video_finish_path)
         web.find_element_by_xpath(text_path).click()
@@ -390,6 +390,7 @@ def InsToWeibo(shift):
     #name = Noon_Shift
     get_ins_content(' '.join(map(str, name)))#Download
     #try:
+    web.refresh()#refresh weibo
     for i in range(len(name)):
         dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo/"+name[i]+'/'
         Image = get_filename(dir,'.jpg')
