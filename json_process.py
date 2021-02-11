@@ -7,7 +7,7 @@ import datetime
 from PIL import Image
 import os
 from selenium import webdriver
-import pyautogui#键鼠
+import pyautogui as mk#键鼠
 import time
 from selenium.webdriver.chrome.options import Options
 import json
@@ -77,10 +77,13 @@ def click_exc():
         try:
             web.find_element_by_link_text('确定').click()
             counter+=1
+            print('clicked')
             time.sleep(2)
         except exc.NoSuchElementException:
+            print('NoSuchElementException')
             send_successfully = True
         except exc.StaleElementReferenceException:
+            print('StaleElementReferenceException')
             send_successfully = True
         else:        
             send_successfully = False
@@ -89,100 +92,63 @@ def click_exc():
 
 #Make sure weibo can be posted
 def double_check(click_path):
+    counter = 0
+    send_successfully = False
     print('here')
-    if click_exc():
-        web.find_element_by_xpath(click_path).click()
-    if click_exc():
-        print('777')
-        return
-
-def post_images(user):
-    try:
-        time.sleep(60)
-        web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
-    except exc.NoSuchElementException:
-        web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
-        web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
-        web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
-        #write_error_message('Image Posting Failed')
-        sys.exit(1)
-    else:
-        time.sleep(30)
-
-def post_videos(user):
-    try:
-        print('posting')
-        time.sleep(20)
-        web.find_element_by_xpath(title_path).send_keys(Translation[user]+'的视频')
-        double_check(video_finish_path)
-        web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
-        time.sleep(5)
-    except exc.NoSuchElementException:
-        web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的视频发送失败啦Σ( ° △ °|||)︴\n')
-        web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
-        web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
-        #write_error_message('Videos Posting Failed')
-        sys.exit(1)
-    else:
-        time.sleep(30)
-    
-def send_weibo(user,media,text,ptype):
-    if ptype == 'Post Image' or ptype == 'Post Video':
-        try:    
-            for i in media.keys():
-                if ptype == 'Post Image':
-                    elem=web.find_element_by_xpath(text_path)
-                    web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, text[i])
-                    for j in media[i]:#ins post no more thant 9 images
-                        web.find_element_by_name('pic1').send_keys(j) 
-                    post_images(user)
-                else:
-                    for j in media[i]:
-                        elem=web.find_element_by_xpath(text_path)
-                        web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, text[i])
-                        web.find_element_by_name('video').send_keys(j) 
-                        post_videos(user)
-        except:
-            #write_error_message('Image/Video Sending Failed')
-            pass
-
-    elif ptype == 'Story Image':
-        try:  
-            remain = len(media['Story_Img'])
-            index = 0
-            for i in text['Story_Text']:
-                elem=web.find_element_by_xpath(text_path)
-                web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, i)
-                for j in range(9) :
-                    if remain <= 0:
-                        break
-                    else:
-                        remain -=1
-                        web.find_element_by_name('pic1').send_keys(list(media['Story_Img'])[index*9 +j]) 
-                index +=1
-                post_images(user)
-        except:
-            #write_error_message('Story Image Sending Failed')
-            pass
-
-    elif ptype == 'Story Video':
+    while not send_successfully:
         try:
-            web.find_element_by_xpath(text_path).send_keys(text['Story_Text'])
-            web.find_element_by_name('video').send_keys(media['Story_Mp4'])
-            post_videos(user)
-        except:
-           #write_error_message('Story Image Sending Failed')
+            web.find_element_by_link_text('发布').click()
+        except exc.ElementClickInterceptedException:
             pass
+        time.sleep(2)
+        print(counter)
+        if counter == 3:
+            #write_error_message('Weibo cannot Post')
+            sys.exit(1)            
+            break
+        try:
+            web.find_element_by_link_text('确定').click()
+            counter+=1
+            print('clicked')
+            time.sleep(2)
+        except exc.NoSuchElementException:
+            print('NoSuchElementException')
+            send_successfully = True
+        except exc.StaleElementReferenceException:
+            print('StaleElementReferenceException')
+            send_successfully = True
+        else:        
+            send_successfully = False
 
 def main():
     username = 'psg'
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
-    with open(dir, "w+") as myfile:
-        myfile.write("testingtestingtesting")
+    #with open(dir, "w+") as myfile:
+    #    myfile.write("testingtestingtesting")
+    timer = 0
+    while not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png')) and timer <=20:
+        print('not found')
+        time.sleep(5)
+        timer +=5   
+    print('found')
+        
+    
+    #double_check(posting_button_path)
+    #try:
+    #    web.maximize_window()
+    #except exc.WebDriverException:
+    #    pass
+    #finally:
+    #    #web.refresh()
+    ##print(mk.center(title))
+    ##mk.click(mk.center(title))
+    #mk.click(848,433)
+    #mk.typewrite('video',0.1)
+    #web.minimize_window()
+   
+    
+    #mk.click(mk.center(mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\chrome.png')))
+    print('finish')
     #Story_Video_Mp4={'Story_Mp4':r'C:\Users\Yi Chen\Desktop\Concatenated.mp4'}
     #Story_Video_Text={'Story_Text':"dimaria快拍视频合集"}
     #send_weibo('angeldimariajm',Story_Video_Mp4,Story_Video_Text,'Story Video')

@@ -5,7 +5,7 @@ import datetime
 from PIL import Image
 import os
 from selenium import webdriver
-import pyautogui#键鼠
+import pyautogui as mk#键鼠
 import time
 from selenium.webdriver.chrome.options import Options
 import json
@@ -272,10 +272,31 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 #def posting_click_check():
 #    timeout = 0
 #    while timeout <5:
-def click_exc(): #not functional keyboard control maybe?
-    send_successfully = False
+
+def entry_video_title(title):
+    try:
+        mk.click(848,433)
+        mk.typewrite(title,0.1)# title has to be ENG
+        time.sleep(2)
+    except:
+        sys.exit(1)
+
+#Make sure weibo can be posted
+def double_check(click_path):
     counter = 0
+    send_successfully = False
     while not send_successfully:
+        if click_path == 'post':
+            try:
+                web.find_element_by_link_text('发布').click()
+            except exc.ElementClickInterceptedException:
+                pass        
+        elif click_path == 'video':
+            try:
+                web.find_element_by_link_text('完成').click()
+            except exc.ElementClickInterceptedException:
+                pass 
+        time.sleep(2)
         if counter == 3:
             write_error_message('Weibo cannot Post')
             sys.exit(1)            
@@ -291,47 +312,44 @@ def click_exc(): #not functional keyboard control maybe?
         else:        
             send_successfully = False
 
-    return send_successfully
-
-#Make sure weibo can be posted
-def double_check(click_path):
-    if click_exc():
-        web.find_element_by_xpath(click_path).click()
-    if click_exc():
-        return True
-
-def post_images(user):#double_check change to mouse/keyboard
+def post_images(user):
     try:
         time.sleep(60)
         web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
+        double_check('post')
     except exc.NoSuchElementException: # not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
         web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
-        write_error_message('Image Posting Failed')
+        double_check('post')
+        write_error_message(Translation[user] +'Image Posting Failed')
         sys.exit(1)
     else:
-        time.sleep(30)
+        time.sleep(10)
 
-def post_videos(user):#double_check change to mouse/keyboard
+def post_videos(user):
     try:
-        time.sleep(60)#timer or longer time
-        web.find_element_by_xpath(title_path).send_keys(Translation[user]+'的视频')
-        double_check(video_finish_path)
-        web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
-        time.sleep(5)
+        timer = 0
+        while not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png')) and timer <=300:#timeout = 5min
+            time.sleep(5)
+            timer +=5   
+        if timer >300:
+            write_error_message('video posting timeout')
+            sys.exit(1)
+        else:
+            entry_video_title('video of ' + user)
+            double_check('video')
+            web.find_element_by_xpath(text_path).click()
+            double_check('post')
     except exc.NoSuchElementException:# not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的视频发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
         web.find_element_by_xpath(text_path).click()
-        double_check(posting_button_path)
-        write_error_message('Videos Posting Failed')
+        double_check('post')
+        write_error_message(Translation[user] +'Videos Posting Failed')
         sys.exit(1)
     else:
-        time.sleep(30)
+        time.sleep(10)
     
 def send_weibo(user,media,text,ptype):
     if ptype == 'Post Image' or ptype == 'Post Video':
@@ -390,7 +408,15 @@ def InsToWeibo(shift):
     #name = Noon_Shift
     get_ins_content(' '.join(map(str, name)))#Download
     #try:
-    web.refresh()#refresh weibo
+
+    try:
+        web.maximize_window()
+    except exc.WebDriverException:
+        pass
+    finally:
+        web.refresh()
+        #time.sleep(10) no need to wait?
+
     for i in range(len(name)):
         dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo/"+name[i]+'/'
         Image = get_filename(dir,'.jpg')
@@ -432,14 +458,16 @@ def InsToWeibo(shift):
                         if list(Story_Video)[0] == (dir + video):
                             clips.append(Video.VideoFileClip(Story_Video[0]))
                             break
-                if clips:
-                    Concatenated = Video.concatenate_videoclips(clips)
-                    Concatenated.write_videofile(dir+'Concatenated.mp4')
-                    Story_Video_Text.update({'Story_Text':(Translation[name[i]])+"快拍视频合集"})
-                    Story_Video_Mp4.update({'Story_Mp4':dir+'Concatenated.mp4'})
-                    print('story_mp4:')
-                    print(Story_Video_Mp4)
-                    send_weibo(name[i],Story_Video_Mp4,Story_Video_Text,'Story Video')
+                if len(clips) >1:
+                    Concatenated = Video.concatenate_videoclips(clips)#downgrade the video quality?
+                    Concatenated.write_videofile(dir+'Concatenated.mp4')                    
+                    Story_Video_Mp4.update({'Story_Mp4':dir+'Concatenated.mp4'})                    
+                elif len(clips) == 1:
+                    Story_Video_Mp4.update({'Story_Mp4':dir+Story_Video[0]})
+                Story_Video_Text.update({'Story_Text':(Translation[name[i]])+"快拍视频合集"})
+                print('story_mp4:')
+                print(Story_Video_Mp4)
+                send_weibo(name[i],Story_Video_Mp4,Story_Video_Text,'Story Video')
             if newIm and list(Story_Img_Dir.values()) :
                 Story_Img_Text=[]
                 Story_Image_Text={}
@@ -480,7 +508,9 @@ def InsToWeibo(shift):
     #    web.find_element_by_name('pic1').send_keys('@PSG-Le-Parisien 出现了不明故障，我崩溃了！！！救我！！！ヽ(*。>Д<)o゜')
     #    web.find_element_by_xpath(posting_button_path).click()
     #    sys.exit('Other Error')
-    sys.exit(0)
+    web.minimize_window()
+
+    #sys.exit(0)
     #Finished = True
 
 
@@ -496,13 +526,13 @@ def main():
         scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-        scheduler.add_job(Timer, 'date', run_date='2021-02-07 11:04:00')
-        #scheduler.add_job(Timer, 'interval', hours =12)
+        scheduler.add_job(Timer, 'date', run_date='2021-02-11 03:30:00')
+        scheduler.add_job(Timer, 'interval', hours =6)
    # 启动调度任务
         scheduler.start()
         while True:
             #continue
-            time.sleep(60)#7200=2*60*60
+            time.sleep(7200)#7200=2*60*60
             #if Finished:
                 #sys.exit(0)
     except (KeyboardInterrupt):
