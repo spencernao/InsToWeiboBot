@@ -87,6 +87,7 @@ def main():
     repo=git.Repo(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
     #changes = [ item.a_path for item in repo.index.diff(None) ]
     repo.git.add(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
+    
     repo.git.commit(m='timestamp')
     #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
     repo.git.push()    
