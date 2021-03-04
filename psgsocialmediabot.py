@@ -127,7 +127,7 @@ def write_error_message(message):
 #Download the users' posts 
 def get_ins_content(users):
     try:
-        command='cmd /c instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps timestamp.txt -q --media-metadata'
+        command='cmd /c instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps ./InsToWeiboBot/timestamp.txt -q --media-metadata'
         subprocess.run([command])
         #os.system(command)
     except: #Still need a solution, unsolved
@@ -541,6 +541,12 @@ def InsToWeibo(shift):
     #    sys.exit('Other Error')
     
     web.minimize_window()
+    subprocess.run(["cd","InsToWeiboBot"])
+    subprocess.run(["git","add","."])
+    subprocess.run(["git","commit","-m"."timestamp"])
+    subprocess.run(["git","push"])
+    subprocess.run(["cd",".."])
+
     print('finish')
     #sys.exit(0)
     #Finished = True
