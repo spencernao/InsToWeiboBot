@@ -90,6 +90,7 @@ def main():
     repo.git.commit(m='timestamp')
     #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
     repo.git.push()
+    
     #subprocess.run("cd InsToWeiboBot", shell = True)
     #subprocess.run("git config user.email 'chenyinaonao@gmail.com'", shell = True)
     #subprocess.run("git config user.name 'spencernao'", shell = True)
