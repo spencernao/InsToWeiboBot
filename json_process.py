@@ -20,7 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import urllib.request
 import os
 import selenium.common.exceptions as exc
-
+import subprocess
 #emoji JS
 JS_ADD_TEXT_TO_INPUT = """
   var elm = arguments[0], txt = arguments[1];
@@ -67,77 +67,30 @@ chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
 web = webdriver.Chrome(chrome_options=chrome_options)
 
 #//*[@id="v6_pl_content_publishertop"]/div/div[2]/div[1]
-def entry_video_title(title):
+def get_ins_content(users):
     try:
-        mk.click(848,433)
-        mk.typewrite(title,0.1)# title has to be ENG
-        time.sleep(2)
-    except:
-        sys.exit(1)
+        command='instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps ./InsToWeiboBot/timestamp.txt -q --media-metadata'
+        subprocess.run(command)
+        #os.system(command)
+    except: #Still need a solution, unsolved
+        #web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien 你Ins被封了Ｏ(≧口≦)Ｏ，快去验证！')
+        #web.find_element_by_xpath(posting_button_path).click()
+        #write_error_message('Ins download failed')
+        sys.exit('Ins Downloading Failed')
 
-#Make sure weibo can be posted
-def double_check(click_path):
-    counter = 0
-    send_successfully = False
-    while not send_successfully:
-        if click_path == 'post':
-            try:
-                web.find_element_by_link_text('发布').click()
-            except exc.ElementClickInterceptedException:
-                pass        
-        elif click_path == 'video':
-            try:
-                web.find_element_by_link_text('完成').click()
-            except exc.ElementClickInterceptedException:
-                pass 
-        time.sleep(2)
-        if counter == 3:
-            write_error_message('Weibo cannot Post')
-            sys.exit(1)            
-            break
-        try:
-            web.find_element_by_link_text('确定').click()
-            counter+=1
-            time.sleep(2)
-        except exc.NoSuchElementException:
-            send_successfully = True
-        except exc.StaleElementReferenceException:
-            send_successfully = True
-        else:        
-            send_successfully = False
 
-def post_images(user):
-    try:
-        time.sleep(60)
-        web.find_element_by_xpath(text_path).click()
-        print('posting')
-        double_check('post')
-        
-    except exc.NoSuchElementException: # not fully functional, mixed up with video positng
-        web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
-        web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
-        web.find_element_by_xpath(text_path).click()
-        double_check('post')
-        write_error_message(Translation[user] +'Image Posting Failed')
-        sys.exit(1)
-    finally:
-        time.sleep(30)
-        web.refresh()
-        time.sleep(30)
-        print('done')
-        web.find_element_by_xpath(text_path).clear()
-
-def entry_video_title(title):
-    try:
-        mk.click(848,433)
-        mk.typewrite(title)# title has to be ENG
-        time.sleep(2)
-    except:
-        sys.exit(1)
 
 def main():
     user= 'psg'
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
+    subprocess.run("cd InsToWeiboBot", shell = True)
+    subprocess.run("git add .", shell = True)
+    subprocess.run("git commit -m timestamp", shell = True)
+    subprocess.run("git push", shell = True)
+    print('updating')
+    time.sleep(10)
+    subprocess.run("cd ..", shell = True)
+    #get_ins_content(user)
     #with open(dir, "w+") as myfile:
     #    myfile.write("testingtestingtesting")
     #web.find_element_by_xpath(text_path).send_keys('psg') 

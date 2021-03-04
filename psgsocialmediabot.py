@@ -127,9 +127,9 @@ def write_error_message(message):
 #Download the users' posts 
 def get_ins_content(users):
     try:
-        command='cmd /c instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps ./InsToWeiboBot/timestamp.txt -q --media-metadata'
-        subprocess.run([command])
-        #os.system(command)
+        command='cmd /c instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps .\InsToWeiboBot\timestamp.txt -q --media-metadata'
+        #subprocess.run([command])
+        os.system(command)
     except: #Still need a solution, unsolved
         #web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien 你Ins被封了Ｏ(≧口≦)Ｏ，快去验证！')
         #web.find_element_by_xpath(posting_button_path).click()
@@ -426,7 +426,7 @@ def InsToWeibo(shift):
         name = Noon_Shift
     elif shift == 'Midnight':
         name = Midnight_Shift
-    #name = Midnight_Shift
+    name = Midnight_Shift
     global post_counter
     #try:
     print('start')
@@ -543,8 +543,9 @@ def InsToWeibo(shift):
     web.minimize_window()
     subprocess.run(["cd","InsToWeiboBot"])
     subprocess.run(["git","add","."])
-    subprocess.run(["git","commit","-m"."timestamp"])
+    subprocess.run(["git","commit","-m","timestamp"])
     subprocess.run(["git","push"])
+    time.sleep(10)
     subprocess.run(["cd",".."])
 
     print('finish')
@@ -563,7 +564,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    #scheduler.add_job(Timer, 'date', run_date='2021-03-01 12:45:30')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-04 22:01:00')
     scheduler.add_job(Timer, 'cron', hour = 3 ,minute=30)
     scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
