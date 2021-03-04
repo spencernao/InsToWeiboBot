@@ -1,6 +1,5 @@
 """PSG Social Media Robot"""
 # -*- coding: UTF-8 -*-
-from weibo import Client
 import datetime
 from PIL import Image
 import os
@@ -14,12 +13,14 @@ import moviepy.editor as Video
 import numpy
 import sys 
 import datetime
+from apscheduler.schedulers.background import BlockingScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
 import selenium.common.exceptions as exc
 #logging.basicConfig(filename=r'C:\Users\Yi Chen\Instagram\InsToWb.log', level=logging.DEBUG, 
 #                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
 #logger=logging.getLogger(__name__)
+import subprocess
 
 
 #Open Browser
@@ -75,7 +76,7 @@ JS_ADD_TEXT_TO_INPUT = """
   elm.dispatchEvent(new Event('change'));
   """
 
-Noon_Shift = [                                  #中午12点班次
+Noon_Shift = [                                  #6点18点班次
             "psg",                              #巴黎圣日耳曼
             "pochettino",                       #波切蒂诺
             "marquinhosm5",                     #马尔基尼奥斯
@@ -91,7 +92,7 @@ Noon_Shift = [                                  #中午12点班次
             "iganagueye",                       #盖伊
             ]
 
-Midnight_Shift = [                              #凌晨0点班次
+Midnight_Shift = [                              #12点0点班次
             "psg",                              #巴黎圣日耳曼
             "keylornavas1",                     #纳瓦斯
             "kimpembe3",                        #金彭贝
@@ -109,23 +110,26 @@ Midnight_Shift = [                              #凌晨0点班次
             "colin_dagba",                      #达巴
             ]
 
-Noon_time = ['22','23','00','01','02','03','04','05','06','07','08','09']
-Midnight_time = ['10','11','12','13','14','15','16','17','18','19','20','21']
-
-Finished = False
+Midnight_time= ['03','04','05','06','07','08','15','16','17','18','19','20']
+Noon_time = ['09','10','11','12','13','14','21','22','23','00','01','02']
+post_counter = 0
 #["pochettino","keylornavas1","thilokehrer","marquinhosm5","marco_verratti92","k.mbappe","leoparedes20","mauroicardi",
 #"neymarjr","angeldimariajm","rafalcantara","juanbernat","iamdanilopereira","sergioricogonzalez1","moise_kean","pablosarabia92","kurzawa",
 #"anderherrera","abdou.lakhad.diallo","draxlerofficial","florenzi","mittchelb","iganagueye","alexandre_letellier30","colin_dagba"]
 
 def write_error_message(message):
-    with open(r"C:\Users\78646\OneDrive\桌面\InsToWeibo\ErrorMSG.txt", "a") as myfile:
-        myfile.write("ERROR: {0}: {1}\n".format(time.ctime(), message))
+    try:
+        with open(r"C:\Users\78646\OneDrive\桌面\InsToWeibo\ErrorMSG.txt", "a") as myfile:
+            myfile.write("ERROR: {0}: {1}\n".format(time.ctime(), message))
+    except: 
+        pass
 
 #Download the users' posts 
 def get_ins_content(users):
     try:
         command='cmd /c instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps timestamp.txt -q --media-metadata'
-        os.system(command)
+        subprocess.run([command])
+        #os.system(command)
     except: #Still need a solution, unsolved
         #web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien 你Ins被封了Ｏ(≧口≦)Ｏ，快去验证！')
         #web.find_element_by_xpath(posting_button_path).click()
@@ -153,8 +157,8 @@ def get_text (username):
                 pass    
     except IOError:
         print('File not found: ' + path)
-
-    return Text_dir
+    else:
+        return Text_dir
 
 def get_post_content(username,dir):
     path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
@@ -201,8 +205,8 @@ def get_post_content(username,dir):
                 pass 
     except IOError:
         print('File not found: ' + path)
-
-    return [Image_dir,Video_dir]
+    else:
+        return [Image_dir,Video_dir]
 
 def get_story(username,dir):
     path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
@@ -259,8 +263,8 @@ def get_story(username,dir):
                 pass 
     except IOError:
         print('File not found: ' + path)
-
-    return [story_video_dir,dump_dir,story_img_dir]
+    else:
+        return [story_video_dir,dump_dir,story_img_dir]
 
 def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
     name = []
@@ -276,7 +280,7 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 def entry_video_title(title):
     try:
         mk.click(848,433)
-        mk.typewrite(title,0.1)# title has to be ENG
+        mk.typewrite(title)# title has to be ENG
         time.sleep(2)
     except:
         sys.exit(1)
@@ -313,9 +317,11 @@ def double_check(click_path):
             send_successfully = False
 
 def post_images(user):
+    global post_counter
     try:
-        time.sleep(60)
-        web.find_element_by_xpath(text_path).click()
+        time.sleep(60)#wait for images uploaded
+        mk.click(875,215)
+        mk.click(1140,220)
         double_check('post')
     except exc.NoSuchElementException: # not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
@@ -324,23 +330,37 @@ def post_images(user):
         double_check('post')
         write_error_message(Translation[user] +'Image Posting Failed')
         sys.exit(1)
-    else:
-        time.sleep(10)
-
+    finally:
+        post_counter+=1
+        time.sleep(30)
+        
 def post_videos(user):
+    global post_counter
     try:
         timer = 0
-        while not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png')) and timer <=300:#timeout = 5min
+        while ((not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png'))) and (not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success1.png'))))and timer <=300:#timeout = 5min
             time.sleep(5)
             timer +=5   
         if timer >300:
-            write_error_message('video posting timeout')
-            sys.exit(1)
+            write_error_message(Translation[user]+' video posting timeout')
+            web.refresh()
+            time.sleep(30)
+            web.find_element_by_xpath(text_path).clear()
         else:
+        #time.sleep(300)
             entry_video_title('video of ' + user)
+            if (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
+                web.find_element_by_link_text('确定').click()
+                entry_video_title('video of ' + user)
+                web.find_element_by_link_text('完成').click()
+                time.sleep(3)
             double_check('video')
-            web.find_element_by_xpath(text_path).click()
+            mk.click(875,215)
+            mk.click(1140,220)
             double_check('post')
+            web.refresh()
+            time.sleep(30)
+            web.find_element_by_xpath(text_path).clear()
     except exc.NoSuchElementException:# not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的视频发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
@@ -348,8 +368,9 @@ def post_videos(user):
         double_check('post')
         write_error_message(Translation[user] +'Videos Posting Failed')
         sys.exit(1)
-    else:
-        time.sleep(10)
+    finally:
+        post_counter+=1
+        time.sleep(30)
     
 def send_weibo(user,media,text,ptype):
     if ptype == 'Post Image' or ptype == 'Post Video':
@@ -368,7 +389,7 @@ def send_weibo(user,media,text,ptype):
                         web.find_element_by_name('video').send_keys(j) 
                         post_videos(user)
         except:
-            write_error_message('Image/Video Sending Failed')
+            write_error_message(Translation[user] + ' Image/Video Sending Failed')
             pass
 
     elif ptype == 'Story Image':
@@ -387,7 +408,7 @@ def send_weibo(user,media,text,ptype):
                 index +=1
                 post_images(user)
         except:
-            write_error_message('Story Image Sending Failed')
+            write_error_message(Translation[user] + ' Story Image Sending Failed')
             pass
 
     elif ptype == 'Story Video':
@@ -396,7 +417,7 @@ def send_weibo(user,media,text,ptype):
             web.find_element_by_name('video').send_keys(media['Story_Mp4'])
             post_videos(user)
         except:
-            write_error_message('Story Image Sending Failed')
+            write_error_message(Translation[user] + ' Story Video Sending Failed')
             pass
         #web.find_element_by_xpath('//*[@id="layer_16118950048131"]/div/div[3]/em/a').click()
 
@@ -405,17 +426,18 @@ def InsToWeibo(shift):
         name = Noon_Shift
     elif shift == 'Midnight':
         name = Midnight_Shift
-    #name = Noon_Shift
-    get_ins_content(' '.join(map(str, name)))#Download
+    #name = Midnight_Shift
+    global post_counter
     #try:
-
+    print('start')
     try:
         web.maximize_window()
     except exc.WebDriverException:
         pass
     finally:
         web.refresh()
-        #time.sleep(10) no need to wait?
+    
+    get_ins_content(' '.join(map(str, name)))#Download
 
     for i in range(len(name)):
         dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo/"+name[i]+'/'
@@ -436,10 +458,12 @@ def InsToWeibo(shift):
                 print("The file "+ r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + name[i]+'\\'+name[i]+'.json' + " does not exist")
             continue
         else:
-            print('start')
-            Text_Dir=get_text(name[i])
-            [Image_Dir,Video_Dir]=get_post_content(name[i],dir)
-            [Story_Video_Dir,Dump_Dir,Story_Img_Dir]=get_story(name[i],dir)
+            try:
+                Text_Dir=get_text(name[i])
+                [Image_Dir,Video_Dir]=get_post_content(name[i],dir)
+                [Story_Video_Dir,Dump_Dir,Story_Img_Dir]=get_story(name[i],dir)
+            except:
+                break
             if Dump_Dir.values() :
                 for dump_file in Dump_Dir.values():
                     if len(dump_file) >0:
@@ -448,22 +472,21 @@ def InsToWeibo(shift):
                         else:
                             print("The file "+ dump_file[0] + " does not exist")
             newIm =get_filename(dir,'.jpg')
-            print('delete done')
+            #web.refresh()
+            #time.sleep(30)
+            #web.find_element_by_xpath(text_path).clear()
             if  Mp4 and list(Story_Video_Dir.values()):
                 clips=[]
                 Story_Video_Text={}
                 Story_Video_Mp4={}
-                for Story_Video in Story_Video_Dir.values():
-                    for video in Mp4:
-                        if list(Story_Video)[0] == (dir + video):
-                            clips.append(Video.VideoFileClip(Story_Video[0]))
-                            break
-                if len(clips) >1:
-                    Concatenated = Video.concatenate_videoclips(clips)#downgrade the video quality?
+                if len(list(Story_Video_Dir.values())) >1:
+                    for Story_Video in list(Story_Video_Dir.values()):
+                        clips.append(Video.VideoFileClip(Story_Video[0]))
+                    Concatenated = Video.concatenate_videoclips(clips,method='compose')#compose should improve the video quality?
                     Concatenated.write_videofile(dir+'Concatenated.mp4')                    
                     Story_Video_Mp4.update({'Story_Mp4':dir+'Concatenated.mp4'})                    
-                elif len(clips) == 1:
-                    Story_Video_Mp4.update({'Story_Mp4':dir+Story_Video[0]})
+                elif len(list(Story_Video_Dir.values())) == 1:
+                    Story_Video_Mp4.update({'Story_Mp4':list(Story_Video_Dir.values())[0][0]})
                 Story_Video_Text.update({'Story_Text':(Translation[name[i]])+"快拍视频合集"})
                 print('story_mp4:')
                 print(Story_Video_Mp4)
@@ -495,21 +518,30 @@ def InsToWeibo(shift):
                 print(Image_Dir)
                 send_weibo(name[i],Image_Dir,Text_Dir,'Post Image')
             #os.remove(r"C:/Users/Yi Chen/Instagram/"+name[i])
+            if post_counter > 3: #refresh just in case
+                web.refresh()
+                time.sleep(30)
+                post_counter = 0
+                web.find_element_by_xpath(text_path).clear()
+                web.find_element_by_xpath(text_path).clear()
+                time.sleep(15)
             for file in os.listdir(dir):    
                 try:
                     if os.path.exists(dir+file):
                         os.remove(dir+file)
+                    else:
+                        print('no such file:%s'%file)
                 except:
                     pass
          #os.unlink(my_file)
-                else:
-                    print('no such file:%s'%file)
+                
     #except:
     #    web.find_element_by_name('pic1').send_keys('@PSG-Le-Parisien 出现了不明故障，我崩溃了！！！救我！！！ヽ(*。>Д<)o゜')
     #    web.find_element_by_xpath(posting_button_path).click()
     #    sys.exit('Other Error')
+    
     web.minimize_window()
-
+    print('finish')
     #sys.exit(0)
     #Finished = True
 
@@ -522,21 +554,25 @@ def Timer():
     InsToWeibo(shift)
 
 def main():        
-    try:    
-        scheduler = BackgroundScheduler()  
+    scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-        scheduler.add_job(Timer, 'date', run_date='2021-02-11 03:30:00')
-        scheduler.add_job(Timer, 'interval', hours =6)
+    #scheduler.add_job(Timer, 'date', run_date='2021-03-01 12:45:30')
+    scheduler.add_job(Timer, 'cron', hour = 3 ,minute=30)
+    scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
+    scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
+    scheduler.add_job(Timer, 'cron', hour = 23,minute=00)
    # 启动调度任务
-        scheduler.start()
+    scheduler.start()
+    try:
+       # This is here to simulate application activity (which keeps the main thread alive).
         while True:
-            #continue
-            time.sleep(7200)#7200=2*60*60
-            #if Finished:
-                #sys.exit(0)
-    except (KeyboardInterrupt):
-        raise
+            time.sleep(50)
+    except (KeyboardInterrupt, SystemExit):
+       # Not strictly necessary if daemonic mode is enabled but should be done if possible
+        scheduler.shutdown()
+        print('Exit The Job!')
+
     
 if __name__ == '__main__':
     main()

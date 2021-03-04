@@ -20,6 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import urllib.request
 import os
 import selenium.common.exceptions as exc
+
 #emoji JS
 JS_ADD_TEXT_TO_INPUT = """
   var elm = arguments[0], txt = arguments[1];
@@ -66,73 +67,82 @@ chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
 web = webdriver.Chrome(chrome_options=chrome_options)
 
 #//*[@id="v6_pl_content_publishertop"]/div/div[2]/div[1]
-def click_exc():
-    send_successfully = False
-    counter = 0
-    while not send_successfully:
-        if counter == 3:
-            #write_error_message('Weibo cannot Post')
-            sys.exit(1)            
-            break
-        try:
-            web.find_element_by_link_text('确定').click()
-            counter+=1
-            print('clicked')
-            time.sleep(2)
-        except exc.NoSuchElementException:
-            print('NoSuchElementException')
-            send_successfully = True
-        except exc.StaleElementReferenceException:
-            print('StaleElementReferenceException')
-            send_successfully = True
-        else:        
-            send_successfully = False
-
-    return send_successfully
+def entry_video_title(title):
+    try:
+        mk.click(848,433)
+        mk.typewrite(title,0.1)# title has to be ENG
+        time.sleep(2)
+    except:
+        sys.exit(1)
 
 #Make sure weibo can be posted
 def double_check(click_path):
     counter = 0
     send_successfully = False
-    print('here')
     while not send_successfully:
-        try:
-            web.find_element_by_link_text('发布').click()
-        except exc.ElementClickInterceptedException:
-            pass
+        if click_path == 'post':
+            try:
+                web.find_element_by_link_text('发布').click()
+            except exc.ElementClickInterceptedException:
+                pass        
+        elif click_path == 'video':
+            try:
+                web.find_element_by_link_text('完成').click()
+            except exc.ElementClickInterceptedException:
+                pass 
         time.sleep(2)
-        print(counter)
         if counter == 3:
-            #write_error_message('Weibo cannot Post')
+            write_error_message('Weibo cannot Post')
             sys.exit(1)            
             break
         try:
             web.find_element_by_link_text('确定').click()
             counter+=1
-            print('clicked')
             time.sleep(2)
         except exc.NoSuchElementException:
-            print('NoSuchElementException')
             send_successfully = True
         except exc.StaleElementReferenceException:
-            print('StaleElementReferenceException')
             send_successfully = True
         else:        
             send_successfully = False
 
+def post_images(user):
+    try:
+        time.sleep(60)
+        web.find_element_by_xpath(text_path).click()
+        print('posting')
+        double_check('post')
+        
+    except exc.NoSuchElementException: # not fully functional, mixed up with video positng
+        web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
+        web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
+        web.find_element_by_xpath(text_path).click()
+        double_check('post')
+        write_error_message(Translation[user] +'Image Posting Failed')
+        sys.exit(1)
+    finally:
+        time.sleep(30)
+        web.refresh()
+        time.sleep(30)
+        print('done')
+        web.find_element_by_xpath(text_path).clear()
+
+def entry_video_title(title):
+    try:
+        mk.click(848,433)
+        mk.typewrite(title)# title has to be ENG
+        time.sleep(2)
+    except:
+        sys.exit(1)
+
 def main():
-    username = 'psg'
+    user= 'psg'
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
     #with open(dir, "w+") as myfile:
     #    myfile.write("testingtestingtesting")
-    timer = 0
-    while not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png')) and timer <=20:
-        print('not found')
-        time.sleep(5)
-        timer +=5   
-    print('found')
-        
-    
+    #web.find_element_by_xpath(text_path).send_keys('psg') 
+    #web.find_element_by_name('pic1').send_keys(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.PNG') 
+    #post_images(user)
     #double_check(posting_button_path)
     #try:
     #    web.maximize_window()
@@ -145,10 +155,14 @@ def main():
     #mk.click(848,433)
     #mk.typewrite('video',0.1)
     #web.minimize_window()
-   
+    while (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
+        web.find_element_by_link_text('确定').click()
+        entry_video_title('video of ' + user)
+        web.find_element_by_link_text('完成').click()
+        print('done')
+        time.sleep(8)    
     
     #mk.click(mk.center(mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\chrome.png')))
-    print('finish')
     #Story_Video_Mp4={'Story_Mp4':r'C:\Users\Yi Chen\Desktop\Concatenated.mp4'}
     #Story_Video_Text={'Story_Text':"dimaria快拍视频合集"}
     #send_weibo('angeldimariajm',Story_Video_Mp4,Story_Video_Text,'Story Video')
