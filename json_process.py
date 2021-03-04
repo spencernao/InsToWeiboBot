@@ -84,13 +84,12 @@ def get_ins_content(users):
 def main():
     user= 'psg'
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
-    repo=git.Repo(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\InsToWeiboBot')
+    repo=git.Repo(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
     #changes = [ item.a_path for item in repo.index.diff(None) ]
-    repo.git.add(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\InsToWeiboBot')
+    repo.git.add(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
     repo.git.commit(m='timestamp')
     #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
-    repo.git.push()
-    
+    repo.git.push()    
     #subprocess.run("cd InsToWeiboBot", shell = True)
     #subprocess.run("git config user.email 'chenyinaonao@gmail.com'", shell = True)
     #subprocess.run("git config user.name 'spencernao'", shell = True)
