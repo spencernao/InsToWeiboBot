@@ -18,12 +18,12 @@ marquinhosm5 = 1614854021
 marco_verratti92 = 1614872343
 leoparedes20 = 1614890421
 neymarjr = 1614890968
-angeldimariajm = 1614889926
-rafalcantara = 1614859695
+angeldimariajm = 1614935728
+rafalcantara = 1614931281
 moise_kean = 1614625283
 kurzawa = 1614625948
 anderherrera = 1614811274
 florenzi = 1614527475
-psg = 1614878608
+psg = 1614937433
 iganagueye = 1614890090
 
