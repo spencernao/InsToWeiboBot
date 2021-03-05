@@ -22,6 +22,7 @@ import os
 import selenium.common.exceptions as exc
 import subprocess
 import git
+
 #emoji JS
 JS_ADD_TEXT_TO_INPUT = """
   var elm = arguments[0], txt = arguments[1];
@@ -87,7 +88,7 @@ def main():
     repo=git.Repo(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
     #changes = [ item.a_path for item in repo.index.diff(None) ]
     repo.git.add(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
-    
+
     repo.git.commit(m='timestamp')
     #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
     repo.git.push()    
