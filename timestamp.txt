@@ -17,13 +17,13 @@ pochettino = 1614811768
 marquinhosm5 = 1615140964
 marco_verratti92 = 1615131253
 leoparedes20 = 1615143767
-neymarjr = 1615146476
+neymarjr = 1615158091
 angeldimariajm = 1615140810
 rafalcantara = 1615123799
 moise_kean = 1614966285
 kurzawa = 1615129530
 anderherrera = 1615070529
-florenzi = 1615124670
+florenzi = 1615188558
 psg = 1615150135
-iganagueye = 1615126486
+iganagueye = 1615195470
 
