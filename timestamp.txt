@@ -14,7 +14,7 @@ mittchelb = 1615026892
 alexandre_letellier30 = 1615229347
 colin_dagba = 1615226726
 pochettino = 1614811768
-marquinhosm5 = 1615237589
+marquinhosm5 = 1615242046
 marco_verratti92 = 1615131253
 leoparedes20 = 1615213960
 neymarjr = 1615239183
@@ -24,6 +24,6 @@ moise_kean = 1614966285
 kurzawa = 1615129530
 anderherrera = 1615216702
 florenzi = 1615188558
-psg = 1615232139
+psg = 1615282451
 iganagueye = 1615224000
 
