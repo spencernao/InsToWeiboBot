@@ -562,7 +562,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-05 03:58:20')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-11 03:58:20')
     scheduler.add_job(Timer, 'cron', hour = 3 ,minute=30)
     scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
