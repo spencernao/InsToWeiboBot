@@ -1,14 +1,14 @@
 [users]
 keylornavas1 = 1615466077
-kimpembe3 = 1615415759
-thilokehrer = 1615458397
+kimpembe3 = 1615481393
+thilokehrer = 1615486858
 k.mbappe = 1615475691
 mauroicardi = 1615462755
 juanbernat = 1615127088
-iamdanilopereira = 1615434477
-sergioricogonzalez1 = 1615414202
-pablosarabia92 = 1615375128
-abdou.lakhad.diallo = 1615461972
+iamdanilopereira = 1615494360
+sergioricogonzalez1 = 1615487096
+pablosarabia92 = 1615498019
+abdou.lakhad.diallo = 1615505035
 draxlerofficial = 1615471156
 mittchelb = 1615288563
 alexandre_letellier30 = 1615415808
