@@ -337,32 +337,47 @@ def post_images(user):
 def post_videos(user):
     global post_counter
     try:
-        timer = 0
-        while ((not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png'))) and (not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success1.png'))))and timer <=300:#timeout = 5min
-            time.sleep(5)
-            timer +=5   
-        if timer >300:
-            write_error_message(Translation[user]+' video posting timeout')
+        time.sleep(10)
+        entry_video_title('video of ' + user)
+        time.sleep(150)
+        if (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
+            web.find_element_by_link_text('确定').click()
             entry_video_title('video of ' + user)
-            double_check('video')
-            web.refresh()
-            time.sleep(30)
-            web.find_element_by_xpath(text_path).clear()
-        else:
-        #time.sleep(300)
-            entry_video_title('video of ' + user)
-            if (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
-                web.find_element_by_link_text('确定').click()
-                entry_video_title('video of ' + user)
-                web.find_element_by_link_text('完成').click()
-                time.sleep(3)
-            double_check('video')
-            mk.click(875,215)
-            mk.click(1140,220)
-            double_check('post')
-            web.refresh()
-            time.sleep(30)
-            web.find_element_by_xpath(text_path).clear()
+            web.find_element_by_link_text('完成').click()
+            time.sleep(3)
+        double_check('video')
+        mk.click(875,215)
+        mk.click(1140,220)
+        double_check('post')
+        web.refresh()
+        time.sleep(30)
+        web.find_element_by_xpath(text_path).clear()
+        #timer = 0
+        #while ((not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png'))) and (not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success1.png'))))and timer <=180:#timeout = 3min
+        #    time.sleep(10)
+        #    timer +=10   
+        #if timer >300:
+        #    write_error_message(Translation[user]+' video posting timeout')
+        #    entry_video_title('video of ' + user)
+        #    double_check('video')
+        #    web.refresh()
+        #    time.sleep(30)
+        #    web.find_element_by_xpath(text_path).clear()
+        #else:
+        ##time.sleep(300)
+        #    entry_video_title('video of ' + user)
+        #    if (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
+        #        web.find_element_by_link_text('确定').click()
+        #        entry_video_title('video of ' + user)
+        #        web.find_element_by_link_text('完成').click()
+        #        time.sleep(3)
+        #    double_check('video')
+        #    mk.click(875,215)
+        #    mk.click(1140,220)
+        #    double_check('post')
+        #    web.refresh()
+        #    time.sleep(30)
+        #    web.find_element_by_xpath(text_path).clear()
     except exc.NoSuchElementException:# not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的视频发送失败啦Σ( ° △ °|||)︴\n')
         web.find_element_by_xpath(text_path).send_keys('快点去修复！( ﹁ ﹁ ) ~→')
@@ -439,10 +454,9 @@ def InsToWeibo(shift):
     finally:
         web.refresh()
 
-    mk.click(1000,1800)
+    mk.click(2000,1000)
     mk.hotkey('ctrl', 'shift', '9')
-    mk.click(200,1850)
-    mk.hotkey('ctrl', 'shift', '9')
+    
 
     get_ins_content(' '.join(map(str, name)))#Download
 
@@ -569,7 +583,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-13 04:13:30')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-13 23:35:30')
     scheduler.add_job(Timer, 'cron', hour = 3 ,minute=30)
     scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
