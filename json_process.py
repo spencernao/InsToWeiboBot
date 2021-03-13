@@ -92,6 +92,8 @@ def main():
     #mk.click(2140,2147)
     mk.click(2300,1800)
     mk.hotkey('ctrl', 'shift', '9')
+    mk.click(200,1850)
+    mk.hotkey('ctrl', 'shift', '9')
     #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
      
     #subprocess.run("cd InsToWeiboBot", shell = True)

@@ -338,19 +338,20 @@ def post_videos(user):
     global post_counter
     try:
         timer = 0
-        while ((not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes\success.png'))) and (not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes\success1.png'))))and timer <=300:#timeout = 5min
-            entry_video_title('video of ' + user)
-            time.sleep(20)
-            timer +=20   
+        while ((not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.png'))) and (not (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success1.png'))))and timer <=300:#timeout = 5min
+            time.sleep(5)
+            timer +=5   
         if timer >300:
             write_error_message(Translation[user]+' video posting timeout')
+            entry_video_title('video of ' + user)
+            double_check('video')
             web.refresh()
             time.sleep(30)
             web.find_element_by_xpath(text_path).clear()
         else:
         #time.sleep(300)
-            #entry_video_title('video of ' + user)
-            if (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes\video_title_6.png')):
+            entry_video_title('video of ' + user)
+            if (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
                 web.find_element_by_link_text('确定').click()
                 entry_video_title('video of ' + user)
                 web.find_element_by_link_text('完成').click()
@@ -437,8 +438,8 @@ def InsToWeibo(shift):
         pass
     finally:
         web.refresh()
-    
-    mk.click(2300,1800)
+
+    mk.click(1000,1800)
     mk.hotkey('ctrl', 'shift', '9')
     mk.click(200,1850)
     mk.hotkey('ctrl', 'shift', '9')
@@ -568,7 +569,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-13 00:10:00')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-13 04:13:30')
     scheduler.add_job(Timer, 'cron', hour = 3 ,minute=30)
     scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
