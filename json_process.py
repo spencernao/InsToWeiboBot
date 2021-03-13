@@ -85,15 +85,17 @@ def get_ins_content(users):
 def main():
     user= 'psg'
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
-    repo=git.Repo(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
+ 
     #changes = [ item.a_path for item in repo.index.diff(None) ]
-    repo.git.add(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
-
-    repo.git.commit(m='timestamp')
+    time.sleep(3)
+    print(mk.position())
+    #mk.click(2140,2147)
+    mk.click(2300,1800)
+    mk.hotkey('ctrl', 'shift', '9')
     #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
-    repo.git.push()    
+     
     #subprocess.run("cd InsToWeiboBot", shell = True)
-    #subprocess.run("git config user.email 'chenyinaonao@gmail.com'", shell = True)
+    #subprocess.run("git config user.email 'chenyinaonao@gmail.com'", shell = True) 
     #subprocess.run("git config user.name 'spencernao'", shell = True)
     #subprocess.run("git add .", shell = True)
     #subprocess.run("git commit -m timestamp", shell = True)
@@ -119,12 +121,12 @@ def main():
     #mk.click(848,433)
     #mk.typewrite('video',0.1)
     #web.minimize_window()
-    while (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
-        web.find_element_by_link_text('确定').click()
-        entry_video_title('video of ' + user)
-        web.find_element_by_link_text('完成').click()
-        print('done')
-        time.sleep(8)    
+    #while (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
+    #    web.find_element_by_link_text('确定').click()
+    #    entry_video_title('video of ' + user)
+    #    web.find_element_by_link_text('完成').click()
+    #    print('done')
+    #    time.sleep(8)    
     
     #mk.click(mk.center(mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\chrome.png')))
     #Story_Video_Mp4={'Story_Mp4':r'C:\Users\Yi Chen\Desktop\Concatenated.mp4'}
