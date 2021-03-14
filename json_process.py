@@ -87,13 +87,15 @@ def main():
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
  
     #changes = [ item.a_path for item in repo.index.diff(None) ]
-    time.sleep(3)
+    time.sleep(5)
+    print(mk.position())
+    time.sleep(5)
     print(mk.position())
     #mk.click(2140,2147)
-    mk.click(2300,1800)
-    mk.hotkey('ctrl', 'shift', '9')
-    mk.click(200,1850)
-    mk.hotkey('ctrl', 'shift', '9')
+    #mk.click(2300,1800)
+    #mk.hotkey('ctrl', 'shift', '9')
+    #mk.click(200,1850)
+    #mk.hotkey('ctrl', 'shift', '9')
     #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
      
     #subprocess.run("cd InsToWeiboBot", shell = True)

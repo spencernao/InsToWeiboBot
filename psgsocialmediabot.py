@@ -279,7 +279,7 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 
 def entry_video_title(title):
     try:
-        mk.click(848,433)
+        mk.click(1690,660)
         mk.typewrite(title)# title has to be ENG
         time.sleep(2)
     except:
@@ -320,8 +320,8 @@ def post_images(user):
     global post_counter
     try:
         time.sleep(60)#wait for images uploaded
-        mk.click(875,215)
-        mk.click(1140,220)
+        mk.click(2230,350)
+        #mk.click(1140,220)
         double_check('post')
     except exc.NoSuchElementException: # not fully functional, mixed up with video positng
         web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien '+ Translation[user] + '的照片发送失败啦Σ( ° △ °|||)︴\n')
@@ -346,8 +346,8 @@ def post_videos(user):
             web.find_element_by_link_text('完成').click()
             time.sleep(3)
         double_check('video')
-        mk.click(875,215)
-        mk.click(1140,220)
+        mk.click(2230,350)
+        #mk.click(1140,220)
         double_check('post')
         web.refresh()
         time.sleep(30)
@@ -583,7 +583,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-13 23:35:30')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-14 13:43:30')
     scheduler.add_job(Timer, 'cron', hour = 3 ,minute=30)
     scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
