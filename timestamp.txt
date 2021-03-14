@@ -1,17 +1,17 @@
 [users]
-keylornavas1 = 1615466077
-kimpembe3 = 1615565622
-thilokehrer = 1615643614
-k.mbappe = 1615562657
+keylornavas1 = 1615664323
+kimpembe3 = 1615727667
+thilokehrer = 1615701638
+k.mbappe = 1615723171
 mauroicardi = 1615462755
 juanbernat = 1615127088
-iamdanilopereira = 1615494360
-sergioricogonzalez1 = 1615587879
+iamdanilopereira = 1615718535
+sergioricogonzalez1 = 1615708986
 pablosarabia92 = 1615553720
 abdou.lakhad.diallo = 1615586415
 draxlerofficial = 1615582141
 mittchelb = 1615546656
-alexandre_letellier30 = 1615625824
+alexandre_letellier30 = 1615717547
 colin_dagba = 1615573367
 pochettino = 1615467408
 marquinhosm5 = 1615724005
