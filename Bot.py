@@ -353,7 +353,8 @@ def post_videos(user):
         mk.click(1150,265)
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
-        double_check('post')
+        #double_check('post')
+        mk.click(830,735)#video complete
         web.refresh()
         time.sleep(30)
         web.find_element_by_xpath(text_path).clear()
@@ -461,12 +462,14 @@ def InsToWeibo(shift):
     finally:
         web.refresh()
 
-    mk.click(2000,1000)
-    mk.hotkey('ctrl', 'shift', '9')
+    
     
 
     get_ins_content(' '.join(map(str, name)))#Download
 
+    mk.click(5,500)
+    mk.hotkey('ctrl', 'shift', '9')
+    
     for i in range(len(name)):
         dir = files_path+"\\"+name[i]+'/'
         Image = get_filename(dir,'.jpg')
@@ -590,9 +593,9 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-14 21:07:00')
+    #scheduler.add_job(Timer, 'date', run_date='2021-03-14 21:07:00')
     scheduler.add_job(Timer, 'cron', hour = 6 ,minute=00)
-    #scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
+    scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 23,minute=55)
    # 启动调度任务
