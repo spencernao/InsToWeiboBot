@@ -16,7 +16,7 @@ import moviepy.editor as Video
 import numpy
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+#from selenium.webdriver.support import expected_conditions as EC
 import urllib.request
 import os
 import selenium.common.exceptions as exc

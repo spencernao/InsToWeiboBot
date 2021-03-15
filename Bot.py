@@ -39,6 +39,9 @@ video_finish_path = '//*[@id="layer_16126711025721"]/div/div[3]/em/a'
 posting_button_path = '//*[@id="v6_pl_content_publishertop"]/div/div[3]/div[1]/a'
 text_path = '//*[@id="v6_pl_content_publishertop"]/div/div[2]/textarea'
 
+files_path = r'C:\Users\Yi Chen\Instagram'
+
+#Title_position = 
 
 #Translation Table
 Translation = {"psg": '巴黎圣日耳曼',
@@ -119,7 +122,7 @@ post_counter = 0
 
 def write_error_message(message):
     try:
-        with open(r"C:\Users\78646\OneDrive\桌面\InsToWeibo\ErrorMSG.txt", "a") as myfile:
+        with open(files_path+"\\"+"ErrorMSG.txt", "a") as myfile:
             myfile.write("ERROR: {0}: {1}\n".format(time.ctime(), message))
     except: 
         pass
@@ -127,7 +130,7 @@ def write_error_message(message):
 #Download the users' posts 
 def get_ins_content(users):
     try:
-        command='instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps ./codes/timestamp.txt -q --media-metadata'
+        command='instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps ./Bot/timestamp.txt -q --media-metadata'
         subprocess.run(command)
         #os.system(command)
     except: #Still need a solution, unsolved
@@ -137,7 +140,7 @@ def get_ins_content(users):
         sys.exit('Ins Downloading Failed')
 
 def get_text (username):
-    path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
+    path = files_path+'\\' + username+'\\'+username+'.json'
     try:        
         with open(path,'rb') as f:
             Text_dir = {}
@@ -161,7 +164,7 @@ def get_text (username):
         return Text_dir
 
 def get_post_content(username,dir):
-    path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
+    path = files_path+'\\' + username+'\\'+username+'.json'
     try:    
         with open(path,'rb') as f:  #error check
             Image_dir={}
@@ -209,7 +212,7 @@ def get_post_content(username,dir):
         return [Image_dir,Video_dir]
 
 def get_story(username,dir):
-    path = r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + username+'\\'+username+'.json'
+    path = files_path+'\\' + username+'\\'+username+'.json'
     try:
         with open(path,'rb') as f:  #error check
             story_video_dir={}
@@ -279,7 +282,7 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 
 def entry_video_title(title):
     try:
-        mk.click(1690,660)
+        mk.click(800,470)
         mk.typewrite(title)# title has to be ENG
         time.sleep(2)
     except:
@@ -319,8 +322,9 @@ def double_check(click_path):
 def post_images(user):
     global post_counter
     try:
-        time.sleep(60)#wait for images uploaded
-        mk.click(2230,350)
+        time.sleep(30)#wait for images uploaded
+        mk.click(1150,265)
+        web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
     except exc.NoSuchElementException: # not fully functional, mixed up with video positng
@@ -340,13 +344,14 @@ def post_videos(user):
         time.sleep(10)
         entry_video_title('video of ' + user)
         time.sleep(150)
-        if (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
+        if (mk.locateOnScreen(files_path+'\\'+'Bot\video_title.png')) or (mk.locateOnScreen(files_path+'\\'+'Bot\video_title_6.png')):
             web.find_element_by_link_text('确定').click()
             entry_video_title('video of ' + user)
             web.find_element_by_link_text('完成').click()
             time.sleep(3)
         double_check('video')
-        mk.click(2230,350)
+        mk.click(1150,265)
+        web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
         web.refresh()
@@ -416,12 +421,14 @@ def send_weibo(user,media,text,ptype):
             for i in text['Story_Text']:
                 elem=web.find_element_by_xpath(text_path)
                 web.execute_script(JS_ADD_TEXT_TO_INPUT, elem, i)
-                for j in range(9) :
+                for j in range(18) :
                     if remain <= 0:
                         break
                     else:
                         remain -=1
-                        web.find_element_by_name('pic1').send_keys(list(media['Story_Img'])[index*9 +j]) 
+                        web.find_element_by_name('pic1').send_keys(list(media['Story_Img'])[index*18 +j]) 
+                        time.sleep(1)
+
                 index +=1
                 post_images(user)
         except:
@@ -461,7 +468,7 @@ def InsToWeibo(shift):
     get_ins_content(' '.join(map(str, name)))#Download
 
     for i in range(len(name)):
-        dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo/"+name[i]+'/'
+        dir = files_path+"\\"+name[i]+'/'
         Image = get_filename(dir,'.jpg')
         Mp4 = get_filename(dir,'.mp4')
         if not Image and not Mp4 :
@@ -473,10 +480,10 @@ def InsToWeibo(shift):
                         print('no such file:%s'%file)
             except FileNotFoundError:
                 pass
-            if os.path.exists(r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + name[i]+'\\'+name[i]+'.json'):
-                 os.remove(r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + name[i]+'\\'+name[i]+'.json')
+            if os.path.exists(files_path+'\\' + name[i]+'\\'+name[i]+'.json'):
+                 os.remove(files_path+'\\' + name[i]+'\\'+name[i]+'.json')
             else:
-                print("The file "+ r'C:\Users\78646\OneDrive\桌面\InsToWeibo'+'\\' + name[i]+'\\'+name[i]+'.json' + " does not exist")
+                print(name[i]+'.json' + " does not exist")
             continue
         else:
             try:
@@ -523,7 +530,7 @@ def InsToWeibo(shift):
                     except:
                         write_error_message('story img pop failed')
                         pass
-                for j in range(0,len(Story_Img_Dir.values()),9):
+                for j in range(0,len(Story_Img_Dir.values()),18):
                     Story_Img_Text.append((Translation[name[i]])+'快拍照片合集')
                 Story_Image_Text.update({'Story_Text':Story_Img_Text})
                 Story_Image_Jpg.update({'Story_Img':Story_Img_Dir.values()})                 
@@ -562,8 +569,8 @@ def InsToWeibo(shift):
     #    sys.exit('Other Error')
     
     web.minimize_window()
-    repo=git.Repo(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
-    repo.git.add(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\codes')
+    repo=git.Repo(files_path+"\\"+'Bot')
+    repo.git.add(files_path+"\\"+'Bot')
     repo.git.commit(m='timestamp')
     repo.git.push()    
     time.sleep(10)
@@ -583,11 +590,11 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-14 13:43:30')
-    scheduler.add_job(Timer, 'cron', hour = 3 ,minute=30)
-    scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
-    scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
-    scheduler.add_job(Timer, 'cron', hour = 23,minute=00)
+    scheduler.add_job(Timer, 'date', run_date='2021-03-14 21:07:00')
+    scheduler.add_job(Timer, 'cron', hour = 6 ,minute=00)
+    #scheduler.add_job(Timer, 'cron', hour = 11,minute=00)
+    #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
+    scheduler.add_job(Timer, 'cron', hour = 23,minute=55)
    # 启动调度任务
     scheduler.start()
     try:
