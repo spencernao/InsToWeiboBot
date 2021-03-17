@@ -282,7 +282,7 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 
 def entry_video_title(title):
     try:
-        mk.click(800,470)
+        mk.click(800,472)
         mk.typewrite(title)# title has to be ENG
         time.sleep(2)
     except:
@@ -344,7 +344,7 @@ def post_videos(user):
         time.sleep(10)
         entry_video_title('video of ' + user)
         time.sleep(150)
-        mk.click(795,740)#video complete
+        mk.click(800,735)#video complete
         print('title clicked')
         if (mk.locateOnScreen(files_path+'\\'+'Bot\video_title.png')) or (mk.locateOnScreen(files_path+'\\'+'Bot\video_title_6.png')):
             web.find_element_by_link_text('确定').click()
@@ -595,7 +595,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    #scheduler.add_job(Timer, 'date', run_date='2021-03-14 21:07:00')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-17 06:25:00')
     scheduler.add_job(Timer, 'cron', hour = 6 ,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 12,minute=00)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
