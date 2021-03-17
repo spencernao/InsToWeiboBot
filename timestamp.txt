@@ -1,18 +1,18 @@
 [users]
-keylornavas1 = 1615664323
-kimpembe3 = 1615741809
+keylornavas1 = 1616009662
+kimpembe3 = 1615995289
 thilokehrer = 1615964970
-k.mbappe = 1615847041
-mauroicardi = 1615462755
+k.mbappe = 1616008486
+mauroicardi = 1616010839
 juanbernat = 1615924456
-iamdanilopereira = 1615903428
-sergioricogonzalez1 = 1615840544
-pablosarabia92 = 1615972730
+iamdanilopereira = 1616014199
+sergioricogonzalez1 = 1616009279
+pablosarabia92 = 1616003612
 abdou.lakhad.diallo = 1615586415
 draxlerofficial = 1615918774
 mittchelb = 1615831818
-alexandre_letellier30 = 1615717547
-colin_dagba = 1615887063
+alexandre_letellier30 = 1615999365
+colin_dagba = 1616008987
 pochettino = 1615467408
 marquinhosm5 = 1615771119
 marco_verratti92 = 1615925938
@@ -24,6 +24,6 @@ moise_kean = 1615942176
 kurzawa = 1615838038
 anderherrera = 1615657720
 florenzi = 1615905888
-psg = 1615974002
+psg = 1616010583
 iganagueye = 1615922665
 
