@@ -357,7 +357,8 @@ def post_videos(user):
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
-        
+        mk.click(1150,318)
+        time.sleep(3)
         web.refresh()
         time.sleep(30)
         web.find_element_by_xpath(text_path).clear()
