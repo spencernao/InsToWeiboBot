@@ -357,6 +357,7 @@ def post_videos(user):
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
+        time.sleep(3)
         mk.click(1150,318)
         time.sleep(3)
         web.refresh()
@@ -597,7 +598,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    #scheduler.add_job(Timer, 'date', run_date='2021-03-17 16:52:00')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-20 8:00:00')
     scheduler.add_job(Timer, 'cron', hour = 6 ,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 12,minute=00)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
