@@ -344,21 +344,24 @@ def post_videos(user):
         time.sleep(10)
         entry_video_title('video of ' + user)
         time.sleep(150)
-        mk.click(800,735)#video complete
-        print('title clicked')
-        if (mk.locateOnScreen(files_path+'\\'+'Bot\video_title.png')) or (mk.locateOnScreen(files_path+'\\'+'Bot\video_title_6.png')):
-            web.find_element_by_link_text('确定').click()
-            entry_video_title('video of ' + user)
-            web.find_element_by_link_text('完成').click()
-            
         double_check('video')
+        #mk.click(800,735)#video complete
+        print('title clicked')
+        if (mk.locateOnScreen(files_path+'\\'+'Bot\\video_title.png')) or (mk.locateOnScreen(files_path+'\\'+'Bot\\video_title_6.png')):
+            try:
+                web.find_element_by_link_text('确定').click()
+                entry_video_title('video of ' + user)
+                web.find_element_by_link_text('完成').click()
+            except:
+                web.refresh()
+                time.sleep(30)
+            
+        
         time.sleep(3)
-        mk.click(1150,265)
+        #mk.click(1150,265)#text area
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
-        time.sleep(3)
-        mk.click(1150,318)
         time.sleep(3)
         web.refresh()
         time.sleep(30)
@@ -598,7 +601,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-20 8:00:00')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-21 01:07:00')
     scheduler.add_job(Timer, 'cron', hour = 6 ,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 12,minute=00)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)

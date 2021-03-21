@@ -63,82 +63,83 @@ title_path = '//*[@id="layer_16124928126881"]/div/div[2]/div[3]/div/dl[1]/dd/div
 video_finish_path = '//*[@id="layer_16124928126881"]/div/div[3]/em/a'
 posting_button_path = '//*[@id="v6_pl_content_publishertop"]/div/div[3]/div[1]/a'
 text_path = '//*[@id="v6_pl_content_publishertop"]/div/div[2]/textarea'
-
+files_path = r'C:\Users\Yi Chen\Instagram'
 chrome_options = Options()
 chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
 web = webdriver.Chrome(chrome_options=chrome_options)
 
-#//*[@id="v6_pl_content_publishertop"]/div/div[2]/div[1]
-def get_ins_content(users):
+def double_check(click_path):
+    counter = 0
+    send_successfully = False
+    while not send_successfully:
+        if click_path == 'post':
+            try:
+                web.find_element_by_link_text('发布').click()
+            except exc.ElementClickInterceptedException:
+                pass
+            #except exc.NoSuchElementException:
+                #pass         
+        elif click_path == 'video':
+            try:
+                web.find_element_by_link_text('完成').click()
+            except exc.ElementClickInterceptedException:
+                pass 
+            #except exc.NoSuchElementException:
+               #pass 
+        time.sleep(2)
+        if counter == 3:
+            #write_error_message('Weibo cannot Post')
+            sys.exit(1)            
+            break
+        try:
+            web.find_element_by_link_text('确定').click()
+            counter+=1
+            time.sleep(2)
+        except exc.NoSuchElementException:
+            send_successfully = True
+        except exc.StaleElementReferenceException:
+            send_successfully = True
+        else:        
+            send_successfully = False
+
+def entry_video_title(title):
     try:
-        command='instagram-scraper ' + users + ' -u instoweibo -p Aa123456789 --latest-stamps ./InsToWeiboBot/timestamp.txt -q --media-metadata'
-        subprocess.run(command)
-        #os.system(command)
-    except: #Still need a solution, unsolved
-        #web.find_element_by_xpath(text_path).send_keys('@PSG-Le-Parisien 你Ins被封了Ｏ(≧口≦)Ｏ，快去验证！')
-        #web.find_element_by_xpath(posting_button_path).click()
-        #write_error_message('Ins download failed')
-        sys.exit('Ins Downloading Failed')
-
-
+        mk.click(800,472)
+        mk.typewrite(title)# title has to be ENG
+        time.sleep(2)
+    except:
+        sys.exit(1)
 
 def main():
     user= 'psg'
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
  
     #changes = [ item.a_path for item in repo.index.diff(None) ]
-    time.sleep(5)
-    print(mk.position())
-    time.sleep(5)
-    print(mk.position())
-    #mk.click(2140,2147)
-    #mk.click(2300,1800)
-    #mk.hotkey('ctrl', 'shift', '9')
-    #mk.click(200,1850)
-    #mk.hotkey('ctrl', 'shift', '9')
-    #remote = repo.create_remote(name='github', url='https://github.com/spencernao/InsToWeiboBot.git')
-     
-    #subprocess.run("cd InsToWeiboBot", shell = True)
-    #subprocess.run("git config user.email 'chenyinaonao@gmail.com'", shell = True) 
-    #subprocess.run("git config user.name 'spencernao'", shell = True)
-    #subprocess.run("git add .", shell = True)
-    #subprocess.run("git commit -m timestamp", shell = True)
-    #subprocess.run("git push origin master", shell = True)
-    #print('updating')
-    #time.sleep(10)
-    #subprocess.run("cd ..", shell = True)
-    #get_ins_content(user)
-    #with open(dir, "w+") as myfile:
-    #    myfile.write("testingtestingtesting")
-    #web.find_element_by_xpath(text_path).send_keys('psg') 
-    #web.find_element_by_name('pic1').send_keys(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\success.PNG') 
-    #post_images(user)
-    #double_check(posting_button_path)
-    #try:
-    #    web.maximize_window()
-    #except exc.WebDriverException:
-    #    pass
-    #finally:
-    #    #web.refresh()
-    ##print(mk.center(title))
-    ##mk.click(mk.center(title))
-    #mk.click(848,433)
-    #mk.typewrite('video',0.1)
-    #web.minimize_window()
-    #while (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title.png'))or (mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\video_title_6.png')):
-    #    web.find_element_by_link_text('确定').click()
-    #    entry_video_title('video of ' + user)
-    #    web.find_element_by_link_text('完成').click()
-    #    print('done')
-    #    time.sleep(8)    
+    #time.sleep(5)
+    #print(mk.position())
+    #time.sleep(5)
+    #print(mk.position())    
+    #web.find_element_by_xpath(video_finish_path).click()
+    #mk.click(800,735)#video complete
+    double_check('video')
+    print('title clicked')
+    if (mk.locateOnScreen(files_path+'\\'+'Bot\\video_title.png')) or (mk.locateOnScreen(files_path+'\\'+'Bot\\video_title_6.png')):
+        try:
+            web.find_element_by_link_text('确定').click()
+            entry_video_title('video of ' + user)
+            web.find_element_by_link_text('完成').click()
+        except:
+            web.refresh()
+            time.sleep(30)
     
-    #mk.click(mk.center(mk.locateOnScreen(r'C:\Users\78646\OneDrive\桌面\InsToWeibo\chrome.png')))
-    #Story_Video_Mp4={'Story_Mp4':r'C:\Users\Yi Chen\Desktop\Concatenated.mp4'}
-    #Story_Video_Text={'Story_Text':"dimaria快拍视频合集"}
-    #send_weibo('angeldimariajm',Story_Video_Mp4,Story_Video_Text,'Story Video')
-    #TEXT=get_text(username)
-    
-
+    time.sleep(3)
+    mk.click(50,265)
+    #web.find_element_by_xpath(text_path).click()
+    double_check('post')
+    print('video once')
+    #mk.click(1140,220)
+    time.sleep(3)
+    web.refresh()
     #driver.find_element_by_link_text('完成').click()
     #driver.find_element_by_xpath(text_path).send_keys('test312312123')
     #timeout = 0
