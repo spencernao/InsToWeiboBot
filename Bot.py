@@ -601,11 +601,11 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-21 01:07:00')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-21 22:20:00')
     scheduler.add_job(Timer, 'cron', hour = 6 ,minute=00)
     scheduler.add_job(Timer, 'cron', hour = 12,minute=00)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
-    scheduler.add_job(Timer, 'cron', hour = 22,minute=30)
+    scheduler.add_job(Timer, 'cron', hour = 22,minute=00)
    # 启动调度任务
     scheduler.start()
     try:
