@@ -601,17 +601,17 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-21 22:20:00')
-    scheduler.add_job(Timer, 'cron', hour = 6 ,minute=00)
-    scheduler.add_job(Timer, 'cron', hour = 12,minute=00)
+    scheduler.add_job(Timer, 'date', run_date='2021-03-22 22:22:00')
+    scheduler.add_job(Timer, 'cron', hour = 6 )
+    scheduler.add_job(Timer, 'cron', hour = 12)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
-    scheduler.add_job(Timer, 'cron', hour = 22,minute=00)
+    scheduler.add_job(Timer, 'cron', hour = 22)
    # 启动调度任务
     scheduler.start()
     try:
        # This is here to simulate application activity (which keeps the main thread alive).
         while True:
-            time.sleep(50)
+            time.sleep(300)
     except (KeyboardInterrupt, SystemExit):
        # Not strictly necessary if daemonic mode is enabled but should be done if possible
         scheduler.shutdown()
