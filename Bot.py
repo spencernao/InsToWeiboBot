@@ -70,7 +70,9 @@ Translation = {"psg": '巴黎圣日耳曼',
             "mittchelb":'巴克',
             "iganagueye":'盖伊',
             "alexandre_letellier30":'勒泰利耶',
-            "colin_dagba":'达巴'}
+            "colin_dagba":'达巴',
+            "xavisimons":'哈维·西蒙斯',
+            "e.michut":'米许'}
 
 #emoji JS
 JS_ADD_TEXT_TO_INPUT = """
@@ -93,6 +95,7 @@ Noon_Shift = [                                  #6点18点班次
             "anderherrera",                     #埃雷拉            
             "florenzi",                         #弗洛伦齐
             "iganagueye",                       #盖伊
+            "e.michut",                         #米许
             ]
 
 Midnight_Shift = [                              #12点0点班次
@@ -111,6 +114,7 @@ Midnight_Shift = [                              #12点0点班次
             "mittchelb",                        #巴克
             "alexandre_letellier30",            #勒泰利耶
             "colin_dagba",                      #达巴
+            #"xavisimons",                       #哈维·西蒙斯
             ]
 
 Midnight_time= ['03','04','05','06','07','08','15','16','17','18','19','20']
@@ -601,7 +605,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-03-25 06:29:00')
+    scheduler.add_job(Timer, 'date', run_date='2021-03-26 22:39:00')
     scheduler.add_job(Timer, 'cron', hour = 6 )
     scheduler.add_job(Timer, 'cron', hour = 12)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
