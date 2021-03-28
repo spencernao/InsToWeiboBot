@@ -24,8 +24,8 @@ moise_kean = 1616787850
 kurzawa = 1616856235
 anderherrera = 1616747777
 florenzi = 1616793261
-psg = 1616839841
-iganagueye = 1616796769
+psg = 1616863687
+iganagueye = 1616876108
 e.michut = 1616790846
 xavisimons = 1614960200
 
