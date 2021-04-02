@@ -115,31 +115,15 @@ def main():
     dir = r"C:\Users\78646\OneDrive\桌面\InsToWeibo\test.txt"
  
     #changes = [ item.a_path for item in repo.index.diff(None) ]
-    #time.sleep(5)
-    #print(mk.position())
-    #time.sleep(5)
-    #print(mk.position())    
+    time.sleep(5)
+    print(mk.position())
+    time.sleep(5)
+    print(mk.position())    
     #web.find_element_by_xpath(video_finish_path).click()
     #mk.click(800,735)#video complete
-    double_check('video')
-    print('title clicked')
-    if (mk.locateOnScreen(files_path+'\\'+'Bot\\video_title.png')) or (mk.locateOnScreen(files_path+'\\'+'Bot\\video_title_6.png')):
-        try:
-            web.find_element_by_link_text('确定').click()
-            entry_video_title('video of ' + user)
-            web.find_element_by_link_text('完成').click()
-        except:
-            web.refresh()
-            time.sleep(30)
     
-    time.sleep(3)
-    mk.click(50,265)
     #web.find_element_by_xpath(text_path).click()
-    double_check('post')
-    print('video once')
-    #mk.click(1140,220)
-    time.sleep(3)
-    web.refresh()
+    
     #driver.find_element_by_link_text('完成').click()
     #driver.find_element_by_xpath(text_path).send_keys('test312312123')
     #timeout = 0
