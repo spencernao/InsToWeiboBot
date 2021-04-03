@@ -41,6 +41,7 @@ text_path = '//*[@id="v6_pl_content_publishertop"]/div/div[2]/textarea'
 
 files_path = r'C:\Users\Yi Chen\Instagram'
 
+histoire_du_psg_text ='\n\n博文内容一切权益归"histoire_du_psg"所有，欢迎前往ins关注该账号。'
 #Title_position = 
 
 #Translation Table
@@ -72,7 +73,8 @@ Translation = {"psg": '巴黎圣日耳曼',
             "alexandre_letellier30":'勒泰利耶',
             "colin_dagba":'达巴',
             "xavisimons":'哈维·西蒙斯',
-            "e.michut":'米许'}
+            "e.michut":'米许',
+            "histoire_du_psg":'PSG历史'}
 
 #emoji JS
 JS_ADD_TEXT_TO_INPUT = """
@@ -96,6 +98,7 @@ Noon_Shift = [                                  #6点18点班次
             "florenzi",                         #弗洛伦齐
             "iganagueye",                       #盖伊
             "e.michut",                         #米许
+            "histoire_du_psg"                   
             ]
 
 Midnight_Shift = [                              #12点0点班次
@@ -156,7 +159,10 @@ def get_text (username):
                     for tag in i["tags"]:
                         x=x.replace('#'+tag+' ','#'+tag+'# ')
                     if len(i["urls"]) >= 1:#multiple video texts have been processed when posting
-                        dict1={(post_id):(Translation[username]+'：'+x)}
+                        if username != "histoire_du_psg":
+                            dict1={(post_id):(Translation[username]+'：'+x)}
+                        else:
+                            dict1={(post_id):(Translation[username]+'：'+x+histoire_du_psg_text)}
                         Text_dir.update(dict1)
                     else:
                         break                    
@@ -533,9 +539,10 @@ def InsToWeibo(shift):
                     Story_Video_Mp4.update({'Story_Mp4':dir+'Concatenated.mp4'})                    
                 elif len(list(Story_Video_Dir.values())) == 1:
                     Story_Video_Mp4.update({'Story_Mp4':list(Story_Video_Dir.values())[0][0]})
-                Story_Video_Text.update({'Story_Text':(Translation[name[i]])+"快拍视频合集"})
-                print('story_mp4:')
-                print(Story_Video_Mp4)
+                if name[i] != "histoire_du_psg":
+                    Story_Video_Text.update({'Story_Text':(Translation[name[i]])+"快拍视频合集"})
+                else:
+                    Story_Video_Text.update({'Story_Text':(Translation[name[i]])+"快拍视频合集"+histoire_du_psg_text})
                 send_weibo(name[i],Story_Video_Mp4,Story_Video_Text,'Story Video')
             if newIm and list(Story_Img_Dir.values()) :
                 Story_Img_Text=[]
@@ -549,19 +556,16 @@ def InsToWeibo(shift):
                         write_error_message('story img pop failed')
                         pass
                 for j in range(0,len(Story_Img_Dir.values()),18):
-                    Story_Img_Text.append((Translation[name[i]])+'快拍照片合集')
+                    if name[i] != "histoire_du_psg":
+                        Story_Img_Text.append((Translation[name[i]])+'快拍照片合集')
+                    else:
+                         Story_Img_Text.append((Translation[name[i]])+'快拍照片合集'+histoire_du_psg_text)               
                 Story_Image_Text.update({'Story_Text':Story_Img_Text})
-                Story_Image_Jpg.update({'Story_Img':Story_Img_Dir.values()})                 
-                print('story_img:')
-                print(Story_Image_Jpg)               
+                Story_Image_Jpg.update({'Story_Img':Story_Img_Dir.values()})       
                 send_weibo(name[i],Story_Image_Jpg,Story_Image_Text,'Story Image')
             if Mp4 and list(Video_Dir.values()):
-                print('MP4:')
-                print(Video_Dir)
                 send_weibo(name[i],Video_Dir,Text_Dir,'Post Video')
             if newIm and list(Image_Dir.values()):
-                print('PostImg:')
-                print(Image_Dir)
                 send_weibo(name[i],Image_Dir,Text_Dir,'Post Image')
             #os.remove(r"C:/Users/Yi Chen/Instagram/"+name[i])
             if post_counter > 5: #refresh just in case
@@ -608,7 +612,7 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-04-02 08:11:50')
+    scheduler.add_job(Timer, 'date', run_date='2021-04-02 21:38:50')
     scheduler.add_job(Timer, 'cron', hour = 6 )
     scheduler.add_job(Timer, 'cron', hour = 12)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
