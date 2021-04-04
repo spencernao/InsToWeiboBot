@@ -1,8 +1,8 @@
 [users]
-keylornavas1 = 1617388320
+keylornavas1 = 1617480970
 kimpembe3 = 1617391713
 thilokehrer = 1617433921
-k.mbappe = 1617384347
+k.mbappe = 1617457312
 mauroicardi = 1617295516
 juanbernat = 1617285493
 iamdanilopereira = 1617442481
@@ -24,7 +24,7 @@ moise_kean = 1617469675
 kurzawa = 1617291703
 anderherrera = 1617293864
 florenzi = 1617359792
-psg = 1617469176
+psg = 1617525852
 iganagueye = 1617436568
 e.michut = 1617462032
 xavisimons = 1617206693
