@@ -292,8 +292,8 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 
 def entry_video_title(title):
     try:
-        #mk.click(800,472)
-        mk.click(781,598)#laptop title position
+        mk.click(800,472)
+        #mk.click(781,598)#laptop title position
         mk.typewrite(title)# title has to be ENG
         time.sleep(2)
     except:
@@ -334,8 +334,8 @@ def post_images(user):
     global post_counter
     try:
         time.sleep(30)#wait for images uploaded
-        #mk.click(1150,265)
-        mk.click(1200,300)#laptop text postion
+        mk.click(1150,265)
+        #mk.click(1200,300)#laptop text postion
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
@@ -370,8 +370,8 @@ def post_videos(user):
             
         
         time.sleep(3)
-        #mk.click(1150,265)#text area
-        mk.click(1200,300)#laptop text postion
+        mk.click(1150,265)#text area
+        #mk.click(1200,300)#laptop text postion
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
@@ -612,11 +612,11 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-04-02 21:38:50')
+    #scheduler.add_job(Timer, 'date', run_date='2021-04-02 21:38:50')
     scheduler.add_job(Timer, 'cron', hour = 6 )
     scheduler.add_job(Timer, 'cron', hour = 12)
     #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
-    scheduler.add_job(Timer, 'cron', hour = 22,minute=30)
+    scheduler.add_job(Timer, 'cron', hour = 22,minute=6)
    # 启动调度任务
     scheduler.start()
     try:
