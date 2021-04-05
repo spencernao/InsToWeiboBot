@@ -292,8 +292,8 @@ def get_filename(path,filetype):  # 输入路径、文件类型 例如'.csv'
 
 def entry_video_title(title):
     try:
-        mk.click(800,472)
-        #mk.click(781,598)#laptop title position
+        #mk.click(800,472)
+        mk.click(781,598)#laptop title position
         mk.typewrite(title)# title has to be ENG
         time.sleep(2)
     except:
@@ -334,8 +334,8 @@ def post_images(user):
     global post_counter
     try:
         time.sleep(30)#wait for images uploaded
-        mk.click(1150,265)
-        #mk.click(1200,300)#laptop text postion
+        #mk.click(1150,265)
+        mk.click(1200,300)#laptop text postion
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
@@ -370,8 +370,8 @@ def post_videos(user):
             
         
         time.sleep(3)
-        mk.click(1150,265)#text area
-        #mk.click(1200,300)#laptop text postion
+        #mk.click(1150,265)#text area
+        mk.click(1200,300)#laptop text postion
         web.find_element_by_xpath(text_path).click()
         #mk.click(1140,220)
         double_check('post')
