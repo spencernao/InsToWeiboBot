@@ -23,10 +23,10 @@ rafalcantara = 1617622445
 moise_kean = 1617638852
 kurzawa = 1617291703
 anderherrera = 1617624281
-florenzi = 1617610233
-psg = 1617639827
+florenzi = 1617659594
+psg = 1617648717
 iganagueye = 1617564412
 e.michut = 1617462032
 xavisimons = 1617206693
-histoire_du_psg = 1617642064
+histoire_du_psg = 1617643178
 
