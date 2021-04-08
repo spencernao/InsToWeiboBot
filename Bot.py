@@ -486,7 +486,7 @@ def InsToWeibo(shift):
     
     
 
-    get_ins_content(' '.join(map(str, name)))#Download
+    #get_ins_content(' '.join(map(str, name)))#Download
 
     mk.click(5,500)
     mk.hotkey('ctrl', 'shift', '9')
@@ -612,10 +612,10 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    #scheduler.add_job(Timer, 'date', run_date='2021-04-02 21:38:50')
+    scheduler.add_job(Timer, 'date', run_date='2021-04-07 19:02:50')
     scheduler.add_job(Timer, 'cron', hour = 6 )
     scheduler.add_job(Timer, 'cron', hour = 12)
-    #scheduler.add_job(Timer, 'cron', hour = 17,minute=00)
+    scheduler.add_job(Timer, 'cron', hour = 17,minute=30)
     scheduler.add_job(Timer, 'cron', hour = 22,minute=6)
    # 启动调度任务
     scheduler.start()
