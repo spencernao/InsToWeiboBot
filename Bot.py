@@ -23,7 +23,7 @@ import selenium.common.exceptions as exc
 import subprocess
 import git
 
-#Open Browser
+#Open Browser use 'chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\selenum\AutomationProfile' to control an opened chrome browser
 try:
     chrome_options = Options()
     chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
@@ -156,8 +156,17 @@ def get_text (username):
                 for i in load_dict["GraphImages"]:
                     post_id = i["id"]
                     x = i["edge_media_to_caption"]["edges"][0]["node"]["text"]+" "
+                    FirstDone = False
                     for tag in i["tags"]:
-                        x=x.replace('#'+tag+' ','#'+tag+'# ')
+                        if(FirstDone):
+                            if '#'+tag+' ':
+                                x=x.replace('#'+tag+' ','#'+tag+'# ')
+                            elif '#'+tag in x :
+                                x=x.replace('#'+tag,'#'+tag+'# ')
+                        else:
+                            x=x.replace('#'+tag,'#'+tag+'# ')
+                            FirstDone = True
+                            
                     if len(i["urls"]) >= 1:#multiple video texts have been processed when posting
                         if username != "histoire_du_psg":
                             dict1={(post_id):(Translation[username]+'：'+x)}
@@ -591,11 +600,22 @@ def InsToWeibo(shift):
     #    sys.exit('Other Error')
     
     web.minimize_window()
-    repo=git.Repo(files_path+"\\"+'Bot')
-    repo.git.add(files_path+"\\"+'Bot')
-    repo.git.commit(m='timestamp')
-    repo.git.push()    
+    #repo=git.Repo(files_path+"\\"+'Bot')
+    #repo.git.add(files_path+"\\"+'Bot')
+    #repo.git.commit(m='timestamp')
+    #repo.git.push()    
     time.sleep(10)
+    try:
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk(files_path):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                # skip if it is symbolic link
+                if not os.path.islink(fp):
+                    total_size += os.path.getsize(fp)
+        print(total_size, 'bytes')
+    except FileNotFoundError:
+        pass
     print('finish')
     #sys.exit(0)
     #Finished = True
@@ -612,10 +632,10 @@ def main():
     scheduler = BackgroundScheduler()  
    # 添加调度任务
    # 调度方法为 timedTask，触发器选择 interval(间隔性)，间隔时长为 12 小时         
-    scheduler.add_job(Timer, 'date', run_date='2021-04-07 22:34:50')
+    #scheduler.add_job(Timer, 'date', run_date='2021-04-15 22:20:50')
     scheduler.add_job(Timer, 'cron', hour = 6 )
     scheduler.add_job(Timer, 'cron', hour = 12)
-    scheduler.add_job(Timer, 'cron', hour = 17,minute=30)
+    scheduler.add_job(Timer, 'cron', hour = 17)
     scheduler.add_job(Timer, 'cron', hour = 22,minute=6)
    # 启动调度任务
     scheduler.start()
